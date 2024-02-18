@@ -1,0 +1,19 @@
+{
+  "name": "lottus.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benchambule/lottus.js.git"
+  },
+  "author": "benchambule@gmail.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/benchambule/lottus.js/issues"
+  },
+  "homepage": "https://github.com/benchambule/lottus.js#readme"
+}
