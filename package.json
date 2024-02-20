@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/benchambule/lottus.js/issues"
   },
-  "homepage": "https://github.com/benchambule/lottus.js#readme"
+  "homepage": "https://github.com/benchambule/lottus.js#readme",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "jsdoc": "^4.0.2",
+    "mocha": "^10.3.0"
+  }
 }

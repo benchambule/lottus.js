@@ -5,8 +5,8 @@ const Bot = require('./src/Bot');
 const fs = require('fs');
 
 
-function createBotsFromFile(filename, session_storage){
-    var app = new App(session_storage);
+function createBotsFromFile(filename, sessionManager){
+    var app = new App(sessionManager);
 
     const file = JSON.parse(fs.readFileSync(filename, 'utf8'));
 
@@ -30,7 +30,7 @@ function createBotsFromFile(filename, session_storage){
                     keyword: keyword,
                     menus: menus,
                     inline: inline,
-                    session_storage: inline?null:session_storage,
+                    sessionManager: inline?null:sessionManager,
                     description: description,
                     exitpoint: exitpoint,
                     exitword: exitword
@@ -44,13 +44,15 @@ function createBotsFromFile(filename, session_storage){
 }
 
 module.exports = {
-    Bot: require('./src/Bot'),
+    Bot: Bot,
     App: App,
     Menu: require('./src/Menu'),
     Option: require('./src/Option'),
     Session: require('./src/Session'),
+    SessionManager: require('./src/SessionManager'),
+    InMemorySessionManager: require('./src/InMemorySessionManager'),
 
     version: require('./package.json'),
 
-    createBotsFromFile: createBotsFromFile
+    createBotsFromFile: createBotsFromFile,
 }

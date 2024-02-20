@@ -1,54 +1,6 @@
 'use strict';
 
-const {Bot, Menu, Option, createBotsFromFile} = require('../index');
-
-
-class InMemorySessionStorage {
-    constructor(){
-        this.sessions = [];
-    }
-
-    getSession(msisdn){
-        var session = null;
-        this.sessions.forEach(element => {
-            if (element !== null && element.msisdn === msisdn && element.active === true){
-                session = element;
-            }
-        });
-
-        return session;
-    }
-
-    saveSession(session){
-        this.sessions.push(session);
-    }
-
-    endSession(session){
-        const testing = (e) => e.msisdn === session.msisdn;
-
-        const index = this.sessions.findIndex(testing);
-
-        if(index > -1){
-            this.sessions.splice(index, 1);
-        }
-    }
-
-    updateSession(session){
-        var ses = []
-        
-        for(var i = 0; i < this.sessions.length; i++){
-            if(this.sessions[i] !== null && this.sessions[i].id !== session.id) {
-                ses.push(session);
-            }
-        }
-
-        var n_session = session;
-
-        ses.push(n_session);
-
-        this.sessions = ses;
-    }
-}
+const {Bot, Menu, Option, createBotsFromFile, InMemorySessionManager} = require('../index');
 
 
 function createDisplayBot() {
@@ -69,7 +21,7 @@ const app = createDisplayBot();
 
 console.log(app.process({msisdn: "123", command: "@display hello world"}));
 console.log(app.process({msisdn: "123", command: "hello world"}));
-var session_storage= new InMemorySessionStorage();
+var sessionManager = new InMemorySessionManager();
 
 function createBarberShopBot() {
     return new Bot({
@@ -108,7 +60,7 @@ function createBarberShopBot() {
                 new Menu({name: 'exit', title: 'Thank you', text: 'Obrigado por nos contactar', final: true})
             ],
             inline: false,
-            session_storage: session_storage
+            sessionManager : sessionManager
         }
     );
 }
@@ -121,11 +73,11 @@ console.log("1", b_app.process({msisdn: "123", command:"1"}));
 console.log("@fake-barber", b_app.process({msisdn: "123", command: "@fake-barber"}));
 console.log("2", b_app.process({msisdn: "123", command: "2"}));
 console.log("0", b_app.process({msisdn: "123", command: "0"}));
-console.log(session_storage);
+console.log(sessionManager );
 console.log("@exit", b_app.process({msisdn: "123", command: "@exit"}));
 
 
-const bots = createBotsFromFile('examples/example.json', new InMemorySessionStorage());
+const bots = createBotsFromFile('examples/example.json', new InMemorySessionManager());
 var bot = new Bot(
     {
         name: "marcar", 

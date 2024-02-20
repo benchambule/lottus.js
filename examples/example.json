@@ -19,7 +19,7 @@
                     "name": "main",
                     "title": "Barbearia do Zé",
                     "text": "O que vai querer fazer hoje?",
-                    "media": null,
+                    "medias": null,
                     "invalid_option_message":"Escolha inválida",
                     "options": [
                         {"key":"1", "label":"Marcar visita", "menu":"marcar_visita"},
@@ -36,13 +36,13 @@
                     "name": "marcar_visita",
                     "title": "Marcar visita",
                     "text": "Escolha a data e hora (dd/mm/aaaa hh:mm). \nEx: 01/01/2020 12:00",
-                    "media": null,
+                    "medias": null,
                     "options": null,
                     "required": {
                         "name": "date",
                         "regex": "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\\d{4} (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$", 
                         "error": "Data e hora inválida! Use o formato dd/mm/aaaa hh:mm. Ex: 01/01/2020 12:00",
-                        "next": "marcacao_confirmar"
+                        "next_menu": "marcacao_confirmar"
                     },
                     "final": false
                 },
@@ -51,7 +51,7 @@
                     "name": "ver_horarios",
                     "title": "Ver horários",
                     "text": "Segunda: 9h-18h\nTerça: 9h-18h\nQuarta: 9h-18h\nQuinta: 9h-18h\nSexta: 9h-18h\nSábado: 9h-13h",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 },
 
@@ -59,7 +59,7 @@
                     "name": "ver_servicos",
                     "title": "Ver serviços",
                     "text": "Corte: 200,00 (MZN)\nBarba: 150,00 (MZN)\nPacote corte + barba: 300,00 (MZN)",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 },
 
@@ -67,7 +67,7 @@
                     "name": "marcacao_confirmar",
                     "title": "Marcar visita",
                     "text": "Marcar visita para {{date}}?",
-                    "media": null,
+                    "medias": null,
                     "options": [
                         {"key":"1", "label":"Sim", "menu":"marcar_visita_confirmada"},
                         {"key":"2", "label":"Não", "menu":"marcar_visita"},
@@ -80,7 +80,7 @@
                     "name": "marcar_visita_confirmada",
                     "title": "Marcar visita",
                     "text": "Visita para {{date}} marcada com sucesso!",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 },
 
@@ -88,7 +88,7 @@
                     "name": "ver_conactos",
                     "title": "Ver contactos",
                     "text": "Telefone: 82 123 4567\nEmail:abc@email.com",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 }
             ]
@@ -104,7 +104,7 @@
                     "name": "main",
                     "title": "Ver horários",
                     "text": "Segunda: 9h-18h\nTerça: 9h-18h\nQuarta: 9h-18h\nQuinta: 9h-18h\nSexta: 9h-18h\nSábado: 9h-13h",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 }
             ]
@@ -120,7 +120,7 @@
                     "name": "main",
                     "title": "Ver serviços",
                     "text": "Corte: 200,00 (MZN)\nBarba: 150,00 (MZN)\nPacote corte + barba: 300,00 (MZN)",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 }
             ]
@@ -136,7 +136,7 @@
                     "name": "main",
                     "title": "Ver localização",
                     "text": "Rua da Barbeira, nº 123, Maputo",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 }
             ]
@@ -152,7 +152,7 @@
                     "name": "ver_conactos",
                     "title": "Ver contactos",
                     "text": "Telefone: 82 123 4567\nEmail:abc@email.com",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 }
             ]
@@ -168,7 +168,7 @@
                     "name": "main",
                     "title": "Echo",
                     "text": "-> {{$@}}",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 }
             ]
@@ -184,7 +184,7 @@
                     "name": "main",
                     "title": "Echo",
                     "text": "Hello {{$0}} {{$2}}",
-                    "media": null,
+                    "medias": null,
                     "final": true
                 }
             ]

@@ -70,7 +70,7 @@
                     "name": "artigos",
                     "title": "📃 Artigos de pesquisa aleatórios ⭐📑",
                     "text": "📑 Nenhum artigo disponível no momento. 🚫",
-                    "media": [],
+                    "medias": [],
                     "options": [
                         {"key":"0", "label":"Voltar", "menu":"portugues"}
                     ]
@@ -80,7 +80,7 @@
                     "name": "fotos",
                     "title": "🏞️ Fotos aleatórios ⭐📷",
                     "text": "📑 Nenhuma foto disponível no momento. 🚫",
-                    "media": [],
+                    "medias": [],
                     "options": [
                         {"key":"0", "label":"Voltar", "menu":"portugues"}
                     ]
@@ -151,7 +151,7 @@
                     "name": "articles",
                     "title": "📃 Random research articles ⭐📑",
                     "text": "📑 No article available at the moment. 🚫",
-                    "media": [],
+                    "medias": [],
                     "options": [
                         {"key":"0", "label":"Back", "menu":"english"}
                     ]
@@ -161,7 +161,7 @@
                     "name": "photos",
                     "title": "🏞️ Random photos ⭐📷",
                     "text": "📑 No photo available at the moment. 🚫",
-                    "media": [],
+                    "medias": [],
                     "options": [
                         {"key":"0", "label":"Back", "menu":"english"}
                     ]
@@ -256,7 +256,7 @@
                     "name": "artigos",
                     "title": "📃 Artigos de pesquisa aleatórios ⭐📑",
                     "text": "📑 Nenhum artigo disponível no momento. 🚫",
-                    "media": []
+                    "medias": []
                 }
             ]
         },
@@ -348,7 +348,7 @@
                     "name": "articles",
                     "title": "📃 Random research articles ⭐📑",
                     "text": "📑 No research article available at the moment. 🚫",
-                    "media": []
+                    "medias": []
                 }
             ]
         },
