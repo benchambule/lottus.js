@@ -20,7 +20,7 @@ const app = new Bot(
     }
 );
 
-console.log(app.process({msisdn: "123", command: "@display hello world"}));
+console.log(app.process({msisdn: "123", prompt: "@display hello world"}));
 ```
 
 ``` {.sourceCode .javascript}
@@ -42,12 +42,12 @@ app.addProcessor('main', function(request){
         {
             name: 'main',
             title: 'Hello',
-            text: '-->'+request.command
+            text: '-->'+request.prompt
         }
     );
 });
 
-console.log(app.process({msisdn: "123", command: "@echo hello world"}));
+console.log(app.process({msisdn: "123", prompt: "@echo hello world"}));
 ```
 
 ```
@@ -100,12 +100,12 @@ function createBarberShopBot() {
 
 const b_app = createBarberShopBot()
 
-console.log("@barbershop", b_app.process({msisdn: "123", command: "@barbershop"}));
-console.log("1", b_app.process({msisdn: "123", command:"1"}));
+console.log("@barbershop", b_app.process({msisdn: "123", prompt: "@barbershop"}));
+console.log("1", b_app.process({msisdn: "123", prompt:"1"}));
 
-console.log("@barbershop", b_app.process({msisdn: "123", command: "@barbershop"}));
-console.log("2", b_app.process({msisdn: "123", command: "2"}));
-console.log("0", b_app.process({msisdn: "123", command: "0"}));
+console.log("@barbershop", b_app.process({msisdn: "123", prompt: "@barbershop"}));
+console.log("2", b_app.process({msisdn: "123", prompt: "2"}));
+console.log("0", b_app.process({msisdn: "123", prompt: "0"}));
 console.log(session_storage);
-console.log("@exit", b_app.process({msisdn: "123", command: "@exit"}));
+console.log("@exit", b_app.process({msisdn: "123", prompt: "@exit"}));
 ```

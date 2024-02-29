@@ -99,20 +99,20 @@ fotoBot.addProcessor('fotos', function(){
 app.addBot(fotoBot);
 
 
-console.log(app.process({msisdn: "123", command: "@bot"}));
-console.log(app.process({msisdn: "123", command: "1"}));
-console.log(app.process({msisdn: "123", command: "6"}));
+console.log(app.process({msisdn: "123", prompt: "@bot"}));
+console.log(app.process({msisdn: "123", prompt: "1"}));
+console.log(app.process({msisdn: "123", prompt: "6"}));
 
-console.log(app.process({msisdn: "123", command: "!help"}));
-console.log(app.process({msisdn: "123", command: "ola"}));
+console.log(app.process({msisdn: "123", prompt: "!help"}));
+console.log(app.process({msisdn: "123", prompt: "ola"}));
 
-console.log(app.process({msisdn: "123", command: "@photos", lang: 'pt'}));
-console.log(app.process({msisdn: "123", command: "@photos", lang: 'en'}));
-console.log(app.process({msisdn: "123", command: "@fotos"}));
-console.log(app.process({msisdn: "123", command: "!ajuda"}));
+console.log(app.process({msisdn: "123", prompt: "@photos", lang: 'pt'}));
+console.log(app.process({msisdn: "123", prompt: "@photos", lang: 'en'}));
+console.log(app.process({msisdn: "123", prompt: "@fotos"}));
+console.log(app.process({msisdn: "123", prompt: "!ajuda"}));
 
-console.log(app.process({msisdn: "123", command: "@bot"}));
-console.log(app.process({msisdn: "123", command: "1"}));
-console.log(app.process({msisdn: "123", command: "6"}));
-console.log(app.process({msisdn: "123", command: "0"}));
-console.log(app.process({msisdn: "123", command: "@sair"}));
+console.log(app.process({msisdn: "123", prompt: "@bot"}));
+console.log(app.process({msisdn: "123", prompt: "1"}));
+console.log(app.process({msisdn: "123", prompt: "6"}));
+console.log(app.process({msisdn: "123", prompt: "0"}));
+console.log(app.process({msisdn: "123", prompt: "@sair"}));

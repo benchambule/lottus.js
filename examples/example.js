@@ -19,8 +19,8 @@ function createDisplayBot() {
 
 const app = createDisplayBot();
 
-console.log(app.process({msisdn: "123", command: "@display hello world"}));
-console.log(app.process({msisdn: "123", command: "hello world"}));
+console.log(app.process({msisdn: "123", prompt: "@display hello world"}));
+console.log(app.process({msisdn: "123", prompt: "hello world"}));
 var sessionManager = new InMemorySessionManager();
 
 function createBarberShopBot() {
@@ -67,14 +67,14 @@ function createBarberShopBot() {
 
 const b_app = createBarberShopBot()
 
-console.log("@fake-barber", b_app.process({msisdn: "123", command: "@fake-barber"}));
-console.log("1", b_app.process({msisdn: "123", command:"1"}));
+console.log("@fake-barber", b_app.process({msisdn: "123", prompt: "@fake-barber"}));
+console.log("1", b_app.process({msisdn: "123", prompt:"1"}));
 
-console.log("@fake-barber", b_app.process({msisdn: "123", command: "@fake-barber"}));
-console.log("2", b_app.process({msisdn: "123", command: "2"}));
-console.log("0", b_app.process({msisdn: "123", command: "0"}));
+console.log("@fake-barber", b_app.process({msisdn: "123", prompt: "@fake-barber"}));
+console.log("2", b_app.process({msisdn: "123", prompt: "2"}));
+console.log("0", b_app.process({msisdn: "123", prompt: "0"}));
 console.log(sessionManager );
-console.log("@exit", b_app.process({msisdn: "123", command: "@exit"}));
+console.log("@exit", b_app.process({msisdn: "123", prompt: "@exit"}));
 
 
 const bots = createBotsFromFile('examples/example.json', new InMemorySessionManager());
@@ -124,14 +124,14 @@ reverse_bot.addProcessor('main', function(request){
         {
             name: null, 
             title: "Reverse", 
-            text: "$ " + request.command.trim().split("").reverse().join(""), 
+            text: "$ " + request.prompt.trim().split("").reverse().join(""), 
             final: true
         }
     )}
 );
 
 addbot.addProcessor('main', function(request){
-    const numbers = request.command.replace(",", ".").trim().split(" ");
+    const numbers = request.prompt.replace(",", ".").trim().split(" ");
 
     const a = parseFloat(numbers[0]);
     const b = parseFloat(numbers[1]);
@@ -150,34 +150,34 @@ bots.addBot(bot);
 bots.addBot(reverse_bot);
 bots.addBot(addbot);
 
-console.log("this", bots.process({msisdn: "123", command: "@marcar 1"}))
+console.log("this", bots.process({msisdn: "123", prompt: "@marcar 1"}))
 
-console.log(bots.process({msisdn: "123", command: "@servicos"}));
+console.log(bots.process({msisdn: "123", prompt: "@servicos"}));
 
-console.log(bots.process({msisdn: "123", command: "@barber"}));
-console.log(bots.process({msisdn: "123", command: "2"}));
+console.log(bots.process({msisdn: "123", prompt: "@barber"}));
+console.log(bots.process({msisdn: "123", prompt: "2"}));
 
-console.log(bots.process({msisdn: "123", command: "@barber"}));
-console.log(bots.process({msisdn: "123", command: "1"}));
-console.log(bots.process({msisdn: "123", command: "27/02/2024 10:30"}));
-console.log(bots.process({msisdn: "123", command: "1"}));
+console.log(bots.process({msisdn: "123", prompt: "@barber"}));
+console.log(bots.process({msisdn: "123", prompt: "1"}));
+console.log(bots.process({msisdn: "123", prompt: "27/02/2024 10:30"}));
+console.log(bots.process({msisdn: "123", prompt: "1"}));
 
 
-console.log(bots.process({msisdn: "123", command: "@barber"}));
-console.log(bots.process({msisdn: "123", command: "@horarios"}));
+console.log(bots.process({msisdn: "123", prompt: "@barber"}));
+console.log(bots.process({msisdn: "123", prompt: "@horarios"}));
 
-console.log(bots.process({msisdn: "123", command: "!ajuda"}));
+console.log(bots.process({msisdn: "123", prompt: "!ajuda"}));
 
-console.log(bots.process({msisdn: "123", command: "@nothing"}));
+console.log(bots.process({msisdn: "123", prompt: "@nothing"}));
 
-console.log(bots.process({msisdn: "123", command: "@reverse benjamim chambule"}));
+console.log(bots.process({msisdn: "123", prompt: "@reverse benjamim chambule"}));
 
-console.log(reverse_bot.process({msisdn: "123", command: "@reverse benjamim chambule"}));
+console.log(reverse_bot.process({msisdn: "123", prompt: "@reverse benjamim chambule"}));
 
-console.log(bots.process({msisdn: "123", command: "!add 123.5 124"}));
-console.log(bots.process({msisdn: "123", command: "!add 123,5 124"}));
-console.log(bots.process({msisdn: "123", command: "!add 123.5 hat"}));
-console.log(bots.process({msisdn: "123", command: "!add 123.5"}));
+console.log(bots.process({msisdn: "123", prompt: "!add 123.5 124"}));
+console.log(bots.process({msisdn: "123", prompt: "!add 123,5 124"}));
+console.log(bots.process({msisdn: "123", prompt: "!add 123.5 hat"}));
+console.log(bots.process({msisdn: "123", prompt: "!add 123.5"}));
 
 
 
@@ -192,7 +192,7 @@ var addbot = new Bot(
 )
 
 addbot.addProcessor('main', function(request){
-    const numbers = request.command.replace(", ", ".").trim().split(" ");
+    const numbers = request.prompt.replace(", ", ".").trim().split(" ");
 
     const a = parseFloat(numbers[0]);
     const b = parseFloat(numbers[1]);
@@ -210,7 +210,7 @@ addbot.addProcessor('main', function(request){
 )
 
 
-console.log(addbot.process({msisdn: "123", command: "!sub 150 124"}));
+console.log(addbot.process({msisdn: "123", prompt: "!sub 150 124"}));
 
 
 var divideBot = new Bot(
@@ -233,6 +233,6 @@ var divideBot = new Bot(
     }
 )
 
-console.log(divideBot.process({msisdn: "123", command: "!div 10 1"}));
+console.log(divideBot.process({msisdn: "123", prompt: "!div 10 1"}));
 
-console.log(bots.process({msisdn: "123", command: "!help"}));
+console.log(bots.process({msisdn: "123", prompt: "!help"}));

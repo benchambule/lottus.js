@@ -73,6 +73,7 @@ class MenuStorage {
 class Bot {
     #_menu_storage = null;
     #_processors = {};
+    #_interceptors = {};
 
     constructor(data){
         if(data){
@@ -127,7 +128,7 @@ class Bot {
      * @returns {Menu} - the menu object. Or object with {tags: Map<string, string>, menu: Menu}.
      * @example
      * addProcessor('processor_name', (request) => {
-     * console.log(request.command);
+     * console.log(request.prompt);
      *      return new Menu({name: 'hello', text:'hello world});
      * });
      * 
@@ -139,6 +140,10 @@ class Bot {
      */
     addProcessor(name, processor){
         this.#_processors[name] = processor;
+    }
+
+    addInterceptor(name, interceptor){
+        this.#_interceptors[name] = interceptor;
     }
 
 
@@ -188,12 +193,12 @@ class Bot {
 
 
     _process_inline_request(request){
-        if(request.command.includes(this.keyword)){
+        if(request.prompt.includes(this.keyword)){
             var menu = this.getMenu(this.entrypoint);
 
             if(menu){
-                request.command = request.command.replace(this.keyword, "").trim();
-                const reqs = request.command.split(" ");
+                request.prompt = request.prompt.replace(this.keyword, "").trim();
+                const reqs = request.prompt.split(" ");
 
                 if(reqs.length > 0){
                     if(menu['text'].includes("{{$@}}")){
@@ -209,7 +214,7 @@ class Bot {
                 const processor = this.getProcessor(this.entrypoint);
 
                 if(processor){
-                    request.command = request.command.replace(this.keyword, '').trim();
+                    request.prompt = request.prompt.replace(this.keyword, '').trim();
                     menu = processor(request);
                 }
             }
@@ -231,21 +236,28 @@ class Bot {
         
         var location = this.entrypoint;
 
-        var processor = this.getProcessor(location);
-        if(processor){
-            new_menu = processor(request);
-        }else{
-            new_menu = this.getMenu(location);
+        const interceptor = this.getInterceptor(location);
+        if(interceptor){
+            new_menu = interceptor(request);
+        }
+
+        if(!new_menu){
+            var processor = this.getProcessor(location);
+
+            if(processor){
+                new_menu = processor(request);
+            }else{
+                new_menu = this.getMenu(location);
+            }
         }
 
         var session = new Session({
             key: request.session ? request.session : Math.floor(Math.random() * 1000000) + 1,
             msisdn: request.msisdn,
-            location: location,
+            location: new_menu.name,
             current_menu: new_menu,
             bot: this.name
-        }
-        );
+        });
 
         return {menu: new_menu, session: session};
     }
@@ -254,8 +266,17 @@ class Bot {
         var selected_option = null;
         var new_menu = null;
 
+        const interceptor = this.getInterceptor(session.location);
+        if(interceptor){
+            new_menu = interceptor(request);
+        }
+
+        if(new_menu){
+            return new_menu;
+        }
+
         menu['options'].forEach(element => {
-            if(element.key === request.command) {
+            if(element.key === request.prompt) {
                 selected_option = element;
             }
         });
@@ -267,7 +288,7 @@ class Bot {
             const processor = this.getProcessor(selected_option['menu']);
 
             if(processor){
-                request.command = request.command.replace(this.keyword, '').trim();
+                request.prompt = request.prompt.replace(this.keyword, '').trim();
                 const result = processor(request, session.tags);
             
                 return result;
@@ -282,9 +303,24 @@ class Bot {
     }
 
     /**
+     * 
+     * @param {string} menu 
+     * @returns 
+     */
+    getInterceptor(menu){
+        var interceptor = this.#_interceptors[menu];
+
+        if(!interceptor){
+            interceptor = this.#_interceptors["*"];
+        }
+
+        return interceptor;
+    }
+
+    /**
      * Figures out the best strategy to process a request.
      * If the bot is inline, it will process the request without creating a session.
-     * @param {object} request - the request details. The minimum request object has the following definition {msisdn: 'msisdn', command: 'command'}.
+     * @param {object} request - the request details. The minimum request object has the following definition {msisdn: 'msisdn', prompt: 'prompt'}.
      * @returns {Menu} - the menu object, or null if no Menu was generated.
      */
     process(request){
@@ -294,7 +330,7 @@ class Bot {
             var session = this.sessionManager.getSession(request.msisdn);
             var new_menu = null;
 
-            if(request.command === this.keyword || !session){
+            if(request.prompt === this.keyword || !session){
                 const result = this._return_entrypoint_menu(request);
                 
                 new_menu = result.menu;
@@ -302,7 +338,7 @@ class Bot {
 
                 this.sessionManager.saveSession(session);
             } else {
-                if(request.command === this.exitword && session){
+                if(request.prompt === this.exitword && session){
                     new_menu = this.getMenu(this.exitpoint);
 
                     if(!new_menu){
@@ -342,11 +378,11 @@ class Bot {
                 if(current_menu['required'] && !new_menu){
                     const required = current_menu['required'];
 
-                    if(!request.command.match(required['regex'])){
+                    if(!request.prompt.match(required['regex'])){
                         new_menu = current_menu
                         new_menu['text'] = required['error'];
                     }else{
-                        session.tags.push({"name": required["name"], 'value': request.command});
+                        session.tags.push({"name": required["name"], 'value': request.prompt});
                         new_menu = this.getMenu(required['next_menu']);
                     }
                 }

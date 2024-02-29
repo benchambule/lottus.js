@@ -5,16 +5,16 @@ const Menu = require("./Menu");
 /**
  * Starting point for the interaction with the Application. An application can have one or more bots
  * @param sessionManager {SessionManager} - The storage implementation which will be used.
- * @param help_commands {Array} - when the user types one of these commands, the help menu will be displayed. 
+ * @param help_prompts {Array} - when the user types one of these prompts, the help menu will be displayed. 
  * The help menu is a list of all bots available, with their descriptions
  */
 class App {
-    constructor(sessionManager, help_commands = ['!help', '!ajuda']){
+    constructor(sessionManager, help_prompts = ['!help', '!ajuda']){
         this.sessionManager = sessionManager;
 
         this.bots = {};
         this.keywords = {};
-        this.help_commands = help_commands;
+        this.help_prompts = help_prompts;
     }
 
     /**
@@ -46,13 +46,13 @@ class App {
     /**
      * 
      * @param {Map<string, string>} request 
-     * @example {msisdn: '841234567', command: '1'}
+     * @example {msisdn: '841234567', prompt: '1'}
      * @param {string} request.msisdn - the msisdn of the user
-     * @param {string} request.command - the command of the user. Which can be a help command, a bot keyword or another text
+     * @param {string} request.prompt - the prompt of the user. Which can be a help prompt, a bot keyword or another text
      * @returns {Menu}
      */
     process(request){
-        if(this.help_commands.includes(request.command)) {
+        if(this.help_prompts.includes(request.prompt)) {
             if(this.sessionManager){
                 const session = this.sessionManager.getSession(request.msisdn);
 
@@ -81,8 +81,8 @@ class App {
             })
         }
 
-        const reqs = request.command.split(" ");
-        var keyword = request.command;
+        const reqs = request.prompt.split(" ");
+        var keyword = request.prompt;
 
         if(reqs.length > 1){
             keyword = reqs[0];
