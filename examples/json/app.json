@@ -3,7 +3,7 @@
     "help_menu": {
         "name": "help",
         "title": "Ajuda | Help",
-        "text": "{{$help}}"
+        "message": "{{$help}}"
     },
     "bots": [
         {
@@ -18,7 +18,7 @@
                 {
                     "name": "portugues",
                     "title": "👋 Bem vindo ao 🤖 do BC 🤗",
-                    "text": "Que informações vais querer saber?",
+                    "message": "Que informações vais querer saber?",
                     "options": [
                         {"key":"1", "label":"👤 Nome completo 🔠", "menu":"nome"},
                         {"key":"2", "label":"💼 Profissão 👨‍💻", "menu":"profissao"},
@@ -33,7 +33,7 @@
                 {
                     "name": "nome",
                     "title": "👤 Nome completo 🔠",
-                    "text": "🤗👤 Benjamim J. Chambule 🇲🇿 ",
+                    "message": "🤗👤 Benjamim J. Chambule 🇲🇿 ",
                     "options": [
                         {"key":"0", "label":"Voltar", "menu":"portugues"}
                     ]
@@ -42,7 +42,7 @@
                 {
                     "name": "profissao",
                     "title": "💼 Profissão 👨‍💻",
-                    "text": "📈👷 Data Engineer 🏗️🛠 na VM 📍",
+                    "message": "📈👷 Data Engineer 🏗️🛠 na VM 📍",
                     "options": [
                         {"key":"0", "label":"Voltar", "menu":"portugues"}
                     ]
@@ -51,7 +51,7 @@
                 {
                     "name": "grau",
                     "title": "🎓 Grau Académico 👨‍🎓",
-                    "text": "👨‍💻 Engeinheiro Informático 💻",
+                    "message": "👨‍💻 Engeinheiro Informático 💻",
                     "options": [
                         {"key":"0", "label":"Voltar", "menu":"portugues"}
                     ]
@@ -60,7 +60,7 @@
                 {
                     "name": "contactos",
                     "title": "👥 Contactos ☎️📧📱",
-                    "text": "📧: benchambule@gmail.com\n📱: 257849902174\n258842217064\nWhatsapp: 258849902174",
+                    "message": "📧: benchambule@gmail.com\n📱: 257849902174\n258842217064\nWhatsapp: 258849902174",
                     "options": [
                         {"key":"0", "label":"Voltar", "menu":"portugues"}
                     ]
@@ -69,7 +69,7 @@
                 {
                     "name": "artigos",
                     "title": "📃 Artigos de pesquisa aleatórios ⭐📑",
-                    "text": "📑 Nenhum artigo disponível no momento. 🚫",
+                    "message": "📑 Nenhum artigo disponível no momento. 🚫",
                     "medias": [],
                     "options": [
                         {"key":"0", "label":"Voltar", "menu":"portugues"}
@@ -79,7 +79,7 @@
                 {
                     "name": "fotos",
                     "title": "🏞️ Fotos aleatórios ⭐📷",
-                    "text": "📑 Nenhuma foto disponível no momento. 🚫",
+                    "message": "📑 Nenhuma foto disponível no momento. 🚫",
                     "medias": [],
                     "options": [
                         {"key":"0", "label":"Voltar", "menu":"portugues"}
@@ -89,7 +89,7 @@
                 {
                     "name": "mensagens",
                     "title": "💬 Mensagens aleatórias 📝",
-                    "text": "📑 Nenhuma mensagem disponível no momento. 🚫",
+                    "message": "📑 Nenhuma mensagem disponível no momento. 🚫",
                     "options": [
                         {"key":"0", "label":"Voltar", "menu":"portugues"}
                     ]
@@ -99,7 +99,7 @@
                 {
                     "name": "english",
                     "title": "👋 Welcome to the 🤖 of BC 🤗",
-                    "text": "How can I help you?",
+                    "message": "How can I help you?",
                     "options": [
                         {"key":"1", "label":"👤 Full name 🔠", "menu":"name"},
                         {"key":"2", "label":"💼 Profession 👨‍💻", "menu":"profession"},
@@ -114,7 +114,7 @@
                 {
                     "name": "name",
                     "title": "👤 Full name 🔠",
-                    "text": "🤗👤 Benjamim J. Chambule 🇲🇿 ",
+                    "message": "🤗👤 Benjamim J. Chambule 🇲🇿 ",
                     "options": [
                         {"key":"0", "label":"Back", "menu":"english"}
                     ]
@@ -123,7 +123,7 @@
                 {
                     "name": "profession",
                     "title": "💼 Profession 👨‍💻",
-                    "text": "📈👷 Data Engineer 🏗️🛠 at VM 📍",
+                    "message": "📈👷 Data Engineer 🏗️🛠 at VM 📍",
                     "options": [
                         {"key":"0", "label":"Back", "menu":"english"}
                     ]
@@ -132,16 +132,16 @@
                 {
                     "name": "degree",
                     "title": "🎓 Academic degree 👨‍🎓",
-                    "text": "👨‍💻 Engeinheiro Informático 💻",
+                    "message": "👨‍💻 Engeinheiro Informático 💻",
                     "options": [
                         {"key":"0", "label":"Back", "menu":"english"}
                     ]
                 },
 
                 {
-                    "name": "contact",
+                    "name": "contacts",
                     "title": "👥 Contacts ☎️📧📱",
-                    "text": "📧: benchambule@gmail.com\n📱: 257849902174\n258842217064\nWhatsapp: 258849902174",
+                    "message": "📧: benchambule@gmail.com\n📱: 257849902174\n258842217064\nWhatsapp: 258849902174",
                     "options": [
                         {"key":"0", "label":"Back", "menu":"english"}
                     ]
@@ -150,7 +150,7 @@
                 {
                     "name": "articles",
                     "title": "📃 Random research articles ⭐📑",
-                    "text": "📑 No article available at the moment. 🚫",
+                    "message": "📑 No article available at the moment. 🚫",
                     "medias": [],
                     "options": [
                         {"key":"0", "label":"Back", "menu":"english"}
@@ -160,7 +160,7 @@
                 {
                     "name": "photos",
                     "title": "🏞️ Random photos ⭐📷",
-                    "text": "📑 No photo available at the moment. 🚫",
+                    "message": "📑 No photo available at the moment. 🚫",
                     "medias": [],
                     "options": [
                         {"key":"0", "label":"Back", "menu":"english"}
@@ -170,7 +170,7 @@
                 {
                     "name": "messages",
                     "title": "💬 Random messages 📝",
-                    "text": "📑 No random message available at the moment. 🚫",
+                    "message": "📑 No random message available at the moment. 🚫",
                     "options": [
                         {"key":"0", "label":"Back", "menu":"english"}
                     ]
@@ -179,7 +179,7 @@
                 {
                     "name": "exit",
                     "title": "👋 Sempre a sua disposição 👋 \n 👋 Always at your disposal. 👋",
-                    "text": "👋👋👋",
+                    "message": "👋👋👋",
                     "final": true
                 }
             ]
@@ -195,7 +195,7 @@
                 {
                     "name": "nome",
                     "title": "👤 Nome completo 🔠",
-                    "text": "🤗👤 Benjamim J. Chambule 🇲🇿 "
+                    "message": "🤗👤 Benjamim J. Chambule 🇲🇿 "
                 }
             ]
         },
@@ -210,7 +210,7 @@
                 {
                     "name": "profissao",
                     "title": "💼 Profissão 👨‍💻",
-                    "text": "📈👷 Data Engineer 🏗️🛠 na VM 📍"
+                    "message": "📈👷 Data Engineer 🏗️🛠 na VM 📍"
                 }
             ]
         },
@@ -225,7 +225,7 @@
                 {
                     "name": "contactos",
                     "title": "👥 Contactos ☎️📧📱",
-                    "text": "📧: benchambule@gmail.com\n📱: 257849902174\n258842217064\nWhatsapp: 258849902174"
+                    "message": "📧: benchambule@gmail.com\n📱: 257849902174\n258842217064\nWhatsapp: 258849902174"
                 }
             ]
         },
@@ -240,7 +240,7 @@
                 {
                     "name": "grau",
                     "title": "🎓 Grau Académico 👨‍🎓",
-                    "text": "👨‍💻 Engeinheiro Informático 💻"
+                    "message": "👨‍💻 Engeinheiro Informático 💻"
                 }
             ]
         },
@@ -255,7 +255,7 @@
                 {
                     "name": "artigos",
                     "title": "📃 Artigos de pesquisa aleatórios ⭐📑",
-                    "text": "📑 Nenhum artigo disponível no momento. 🚫",
+                    "message": "📑 Nenhum artigo disponível no momento. 🚫",
                     "medias": []
                 }
             ]
@@ -271,7 +271,7 @@
                 {
                     "name": "mensagens",
                     "title": "💬 Mensagens aleatórias 📝",
-                    "text": "📑 Nenhuma mensagem disponível no momento. 🚫"
+                    "message": "📑 Nenhuma mensagem disponível no momento. 🚫"
                 }
             ]
         },
@@ -287,7 +287,7 @@
                 {
                     "name": "name",
                     "title": "👤 Full name 🔠",
-                    "text": "🤗👤 Benjamim J. Chambule 🇲🇿 "
+                    "message": "🤗👤 Benjamim J. Chambule 🇲🇿 "
                 }
             ]
         },
@@ -302,7 +302,7 @@
                 {
                     "name": "profession",
                     "title": "💼 Profession 👨‍💻",
-                    "text": "📈👷 Data Engineer 🏗️🛠 na VM 📍"
+                    "message": "📈👷 Data Engineer 🏗️🛠 na VM 📍"
                 }
             ]
         },
@@ -317,7 +317,7 @@
                 {
                     "name": "contacts",
                     "title": "👥 Contactos ☎️📧📱",
-                    "text": "📧: benchambule@gmail.com\n📱: 257849902174\n258842217064\nWhatsapp: 258849902174"
+                    "message": "📧: benchambule@gmail.com\n📱: 257849902174\n258842217064\nWhatsapp: 258849902174"
                 }
             ]
         },
@@ -332,7 +332,7 @@
                 {
                     "name": "degree",
                     "title": "🎓 Academic degree 👨‍🎓",
-                    "text": "👨‍💻 Engeinheiro Informático 💻"
+                    "message": "👨‍💻 Engeinheiro Informático 💻"
                 }
             ]
         },
@@ -347,7 +347,7 @@
                 {
                     "name": "articles",
                     "title": "📃 Random research articles ⭐📑",
-                    "text": "📑 No research article available at the moment. 🚫",
+                    "message": "📑 No research article available at the moment. 🚫",
                     "medias": []
                 }
             ]
@@ -363,7 +363,7 @@
                 {
                     "name": "messages",
                     "title": "💬 Random messages 📝",
-                    "text": "📑 No random message available at the moment. 🚫"
+                    "message": "📑 No random message available at the moment. 🚫"
                 }
             ]
         }

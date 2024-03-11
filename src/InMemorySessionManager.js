@@ -1,11 +1,16 @@
 'use strict';
+const Session = require('./Session');
 
-class InMemorySessionManager {
+class InMemorySessionManager{
     constructor(){
         this.sessions = [];
     }
 
-    getSession(msisdn){
+    createNew(session){
+        this.sessions.push(session);
+    }
+
+    get(msisdn) {
         var session = null;
         this.sessions.forEach(element => {
             if (element !== null && element.msisdn === msisdn){
@@ -16,11 +21,11 @@ class InMemorySessionManager {
         return session;
     }
 
-    saveSession(session){
+    set(session) {
         this.sessions.push(session);
     }
 
-    endSession(session){
+    close(session){
         const testing = (e) => e.msisdn === session.msisdn;
 
         const index = this.sessions.findIndex(testing);
@@ -30,11 +35,11 @@ class InMemorySessionManager {
         }
     }
 
-    updateSession(session){
+    update(session){
         var ses = []
         
         for(var i = 0; i < this.sessions.length; i++){
-            if(this.sessions[i] !== null && this.sessions[i].id !== session.id) {
+            if(this.sessions[i] !== null && this.sessions[i].msisdn !== session.msisdn) {
                 ses.push(session);
             }
         }

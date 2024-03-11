@@ -1,7 +1,5 @@
 'use strict';
 
-const Menu = require("./Menu");
-
 /**
  * Starting point for the interaction with the Application. An application can have one or more bots
  * @param sessionManager {SessionManager} - The storage implementation which will be used.
@@ -9,12 +7,13 @@ const Menu = require("./Menu");
  * The help menu is a list of all bots available, with their descriptions
  */
 class App {
-    constructor(sessionManager, help_prompts = ['!help', '!ajuda']){
+    constructor(sessionManager, help_prompts = ['!help', '!ajuda'], debug = false){
         this.sessionManager = sessionManager;
 
         this.bots = {};
         this.keywords = {};
         this.help_prompts = help_prompts;
+        this.debug = debug;
     }
 
     /**
@@ -22,6 +21,7 @@ class App {
      * @param bot {Bot} - the bot to be added to the application.
      */
     addBot(bot){
+        bot.debug = this.debug;
         this.bots[bot.name] = bot;
         this.keywords[bot.keyword] = bot.name;
     }
@@ -48,20 +48,16 @@ class App {
      * @param {Map<string, string>} request 
      * @example {msisdn: '841234567', prompt: '1'}
      * @param {string} request.msisdn - the msisdn of the user
-     * @param {string} request.prompt - the prompt of the user. Which can be a help prompt, a bot keyword or another text
+     * @param {string} request.prompt - the prompt of the user. Which can be a help prompt, a bot keyword or another message
      * @returns {Menu}
      */
     process(request){
+        if(this.debug){
+            console.log("Processing request:", request);
+        }
+
         if(this.help_prompts.includes(request.prompt)) {
-            if(this.sessionManager){
-                const session = this.sessionManager.getSession(request.msisdn);
-
-                if(session){
-                    this.sessionManager.endSession(session);
-                }
-            }
-
-            var text = "Available bots";
+            var message = "Available bots";
             
             for(const [key, value] of Object.entries(this.bots)){
                 var description = "";
@@ -70,15 +66,15 @@ class App {
                     description = value.description;
                 }
 
-                text += "\n" + value.keyword + " : " + description;
+                message += "\n" + value.keyword + " : " + description;
             }
 
-            return new Menu({
+            return {
                 name: 'help_menu',
                 title: 'Help',
-                text: text,
+                message: message,
                 final: true
-            })
+            }
         }
 
         const reqs = request.prompt.split(" ");
@@ -89,19 +85,40 @@ class App {
         }
 
         if(keyword in this.keywords){
-            const session = this.sessionManager.getSession(request.msisdn);
+            const session = this.sessionManager.get(request.msisdn);
+            const bot = this.getBot(this.keywords[keyword]);
 
-            if(session){
-                this.sessionManager.endSession(session);
+            if(session && !bot.inline){
+                if(this.debug){
+                    console.log("Closing session, bot is not inline");
+                }
+                this.sessionManager.close(session);
             }
 
-            return this.getBot(this.keywords[keyword]).process(request);
+            var result = null;
+            if(bot){
+                if(this.debug){
+                    console.log("Processing request ", request, "with bot", bot.name);
+                }
+                result = bot.process(request);  
+            }
+            
+            return result;
         }else{
             if(this.sessionManager){
-                const session = this.sessionManager.getSession(request.msisdn);
+                const session = this.sessionManager.get(request.msisdn);
 
                 if(session){
-                    return this.getBot(session.bot).process(request);
+                    const bot = this.getBot(session.bot);
+                    var result = null;
+                    if(bot){
+                        if(this.debug){
+                            console.log("Processing request ", request, "with bot", bot.name);
+                        }
+                        result = bot.process(request);  
+                    }
+                    
+                    return result;
                 }
             }
         }
