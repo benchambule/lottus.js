@@ -158,7 +158,7 @@ function inner_processor(bot, request){
             result = process_options(request, session.tags, context);
         }
 
-        if((!result && current_menu.required) || (result && result.menu && result.menu.name === current_menu.name)){
+        if(current_menu.required && (!result || (result && result.menu && result.menu.name === current_menu.name))){
             if(bot.debug){
                 console.log("Processing required for :", current_menu.name);
             }

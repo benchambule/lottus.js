@@ -9,8 +9,7 @@ var bot = new Bot({
     entrypoint: 'main',
     keyword: '@barber',
     inline: false,
-    sessionManager: sessionManager,
-    debug: true
+    sessionManager: sessionManager
 });
 
 bot.addLocationProcessor('main', function(req, tags, ctxt){
@@ -19,8 +18,8 @@ bot.addLocationProcessor('main', function(req, tags, ctxt){
         title: 'Welcome to Barbershop', 
         text: 'Select an option',
         options: [
-            {key: '1', label: 'Information', next_menu: 'info'},
-            {key: '2', label: 'Location', next_menu: 'location'},
+            {key: '1', label: 'Information', menu: 'info'},
+            {key: '2', label: 'Location', menu: 'location'},
         ]
     }
 
@@ -47,7 +46,7 @@ bot.addLocationProcessor('location', function(req, tags, ctxt){
             title: 'Location',
             text: 'Barbershop location',
             options: [
-                {key: '0', label: 'Back', next_menu: 'main'}
+                {key: '0', label: 'Back', menu: 'main'}
             ]
         }
     }
@@ -63,7 +62,6 @@ bot.addLocationInterceptor('info', function(req){
 });
 
 bot.addLocationInterceptor("*", function(req){
-    console.log('interceptor called');
     if(req.prompt == '.exit'){
         return {
             menu: {
@@ -74,14 +72,17 @@ bot.addLocationInterceptor("*", function(req){
     }
 });
 
-// console.log(bot.process({msisdn: '123', prompt: '@barber'}));
-// console.log(bot.process({msisdn: '123', prompt: 'hello'}));
+console.log(bot.getLocationInterceptors());
+console.log(bot.getLocationProcessors());
+
+console.log(bot.process({msisdn: '123', prompt: '@barber'}));
+console.log(bot.process({msisdn: '123', prompt: 'hello'}));
 
 console.log(bot.process({msisdn: '123', prompt: '@barber'}));
 console.log(bot.process({msisdn: '123', prompt: '.exit'}));
 
-// console.log(bot.process({msisdn: '123', prompt: '@barber'}));
-// console.log(bot.process({msisdn: '123', prompt: '1'}));
+console.log(bot.process({msisdn: '123', prompt: '@barber'}));
+console.log(bot.process({msisdn: '123', prompt: '1'}));
 
-// console.log(bot.process({msisdn: '123', prompt: '@barber'}));
-// console.log(bot.process({msisdn: '123', prompt: '2'}));
+console.log(bot.process({msisdn: '123', prompt: '@barber'}));
+console.log(bot.process({msisdn: '123', prompt: '2'}));
