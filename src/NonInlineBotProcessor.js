@@ -190,7 +190,7 @@ function inner_processor(bot, request){
                 menu = result.menu;
                 session.location = result.menu.name;
 
-                if(!result.menu.options || !result.menu.required || !result.menu.next){
+                if(!result.menu.options && !result.menu.required && !result.menu.next){
                     result.menu.final = true;
                 }
             }
