@@ -1,6 +1,5 @@
 'use strict';
 
-const Menu = require('./Menu')
 const inlineBotProcessor = require('./InlineBotProcessor')
 const nonInlineBotProcessor = require('./NonInlineBotProcessor')
 
@@ -99,6 +98,19 @@ class Bot {
         this.#_interceptors[name] = interceptor;
     }
 
+    addJSONMenus(menus){
+        for(var menu of menus){
+            this.addJSONMenu(menu);
+        }
+    }
+
+    addJSONMenu(menu){
+        this.addLocationProcessor(menu.name, () => {
+            return {
+                menu: menu
+            }
+        });
+    }
 
     /**
      * Update processor details
