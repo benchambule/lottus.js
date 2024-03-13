@@ -59,6 +59,10 @@ enq.addLocationProcessor('sport', (request, tags) => {
             name: "sport",
             error_message: "Invalid sport",
             regex: /^[a-zA-Z]+$/,
+            in: {
+                options: ["Football", "Basketball", "Racing"],
+                ignore_case: false,
+            }
         },
         next_menu: "show_info",
     };
@@ -84,4 +88,5 @@ enq.addLocationProcessor('show_info', (request, tags) => {
 console.log(enq.process({'msisdn': '123', "prompt": "@enq"}));
 console.log(enq.process({'msisdn': '123', "prompt": "Ben Chambule"}));
 console.log(enq.process({'msisdn': '123', "prompt": "23/04/1994"}));
+console.log(enq.process({'msisdn': '123', "prompt": "no-sport"}));
 console.log(enq.process({'msisdn': '123', "prompt": "Football"}));
