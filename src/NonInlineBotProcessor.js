@@ -50,6 +50,25 @@ function process_required(request, tags, context){
 
     const required = current_menu.required;
 
+    if(required.in){
+        var opts = required.in.options;
+        var prompt = request.prompt.trim();
+        if(required.in.ignore_case){
+            prompt = request.prompt.trim().toUpperCase();
+            opts = []
+            for(var opt of required.in.options){
+                opts.push(opt.toUpperCase());
+            }
+        }
+
+        if(!(opts.includes(prompt))){
+            var menu = current_menu;
+            menu['message'] = required.error_message;
+
+            return {menu: menu, tags: tags}
+        }
+    }
+
     if(!required.regex.test(request.prompt)){
         var menu = current_menu;
         menu['message'] = required.error_message;
