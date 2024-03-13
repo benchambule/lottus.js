@@ -8,7 +8,6 @@ var enq = new Bot(
         inline: false, 
         description: "This is an enquiry bot",
         sessionManager: new InMemorySessionManager(),
-        debug: true,
     }
 );
 

@@ -85,15 +85,11 @@ info.addLocationProcessor('country', () => {
 });
 
 info.addLocationInterceptor('*', function(request, tags, ctxt){
-    console.log('interceptor')
     const session = ctxt.bot.sessionManager.get(request.msisdn);
     if(request.prompt.trim() === '@exit'){
-        console.log(ctxt.bot.sessionManager.get(session), 'closing!');
         ctxt.bot.sessionManager.close(session);
-        console.log(ctxt.bot.sessionManager.get(session), 'closed!');
         return {
             menu: {
-                name: "@exit",
                 title: "Thank you for using Ben's bot",
             }
         }
@@ -101,4 +97,7 @@ info.addLocationInterceptor('*', function(request, tags, ctxt){
 });
 
 console.log(info.process({msisdn: "123", prompt: "@info"}));
+console.log(info.process({msisdn: "123", prompt: "1"}));
+console.log(info.process({msisdn: "123", prompt: "0"}));
+console.log(info.process({msisdn: "123", prompt: "2"}));
 console.log(info.process({msisdn: "123", prompt: "@exit"}));
