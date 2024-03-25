@@ -4,7 +4,7 @@ function process_options(request, tags, context){
     }
     var result = null;
 
-    for (const [key, value] of Object.entries(context.current_menu.options)) {
+    for (const [, value] of Object.entries(context.current_menu.options)) {
         if(request.prompt.toString() === value.key.toString()){
             const interceptor = context.bot.getLocationInterceptor(value.menu);
             if(interceptor){
@@ -29,7 +29,7 @@ function process_options(request, tags, context){
     }
 
     if(!result){
-        current_menu = context.current_menu;
+        var current_menu = context.current_menu;
         current_menu.message = context.invali_option_message;
 
         return {
@@ -49,6 +49,7 @@ function process_required(request, tags, context){
     const current_menu = context.current_menu;
 
     const required = current_menu.required;
+    var menu = null;
 
     if(required.in){
         var opts = required.in.options;
@@ -62,7 +63,7 @@ function process_required(request, tags, context){
         }
 
         if(!(opts.includes(prompt))){
-            var menu = current_menu;
+            menu = current_menu;
             menu['message'] = required.error_message;
 
             return {menu: menu, tags: tags}
@@ -70,7 +71,7 @@ function process_required(request, tags, context){
     }
 
     if(!required.regex.test(request.prompt)){
-        var menu = current_menu;
+        menu = current_menu;
         menu['message'] = required.error_message;
 
         return {menu: menu, tags: tags};
@@ -113,6 +114,7 @@ function inner_processor(bot, request){
     }
     var result = null;
     var menu = null;
+    var session = null;
 
     if (request.prompt === bot.keyword){
         const interceptor = bot.getLocationInterceptor(bot.entrypoint);
@@ -138,7 +140,7 @@ function inner_processor(bot, request){
         if(result && result.menu && !result.menu.final){
             menu = result.menu;
 
-            var session = bot.sessionManager.createNew(
+            session = bot.sessionManager.createNew(
                 {
                     bot: bot.name,
                     msisdn: request.msisdn,
@@ -152,16 +154,16 @@ function inner_processor(bot, request){
         return {menu: menu, session: session};
     }
 
-    var session = bot.sessionManager.get(request.msisdn);
+    session = bot.sessionManager.get(request.msisdn);
     if(!session){
-        console.log("Session for msisdn", msisdn, 'not found!')
+        console.log("Session for msisdn", request.msisdn, 'not found!')
     }
 
     if(session){
         const current_menu = session.current_menu;
         const interceptor = bot.getLocationInterceptor(current_menu.name);
 
-        context = {bot: bot, current_menu: session.current_menu};
+        const context = {bot: bot, current_menu: session.current_menu};
 
         if(interceptor){
             if(bot.debug){
@@ -241,18 +243,18 @@ function process(bot, request){
     }
     var result = inner_processor(bot, request);
 
-    if(!result.menu){
+    if(!result || !result.menu){
         return;
     }
 
     if(result && result.menu){
+        const reqs = request.prompt.split(" ");
+        var txt = reqs.join(" ");
         if(result.menu.message && result.menu.message.includes("{{$@}}")){
-            var txt = reqs.join(" ");
             result.menu.message = result.menu.message.replace("{{$@}}", txt);
         }
 
         if(result.menu.title && result.menu.title.includes("{{$@}}")){
-            var txt = reqs.join(" ");
             result.menu.title = result.menu.title.replace("{{$@}}", txt);
         }
         
