@@ -29,14 +29,13 @@ function process(bot, request) {
 
         if(result && result.menu){
             const reqs = request.prompt.split(" ");
+            const txt = reqs.join(" ");
     
             if(result.menu.message && result.menu.message.includes("{{$@}}")){
-                var txt = reqs.join(" ");
                 result.menu.message = result.menu.message.replace("{{$@}}", txt);
             }
     
             if(result.menu.title && result.menu.title.includes("{{$@}}")){
-                var txt = reqs.join(" ");
                 result.menu.title = result.menu.title.replace("{{$@}}", txt);
             }
     
