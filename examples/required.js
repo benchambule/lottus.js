@@ -8,6 +8,7 @@ var enq = new Bot(
         inline: false, 
         description: "This is an enquiry bot",
         sessionManager: new InMemorySessionManager(),
+        debug: false
     }
 );
 
@@ -21,7 +22,7 @@ enq.addLocationProcessor('name', (request, tags) => {
             error_message: "Invalid name",
             regex: /^.*$/,
         },
-        next_menu: "birthday",
+        next: "birthday",
     }
 
     return {
@@ -39,7 +40,7 @@ enq.addLocationProcessor('birthday', (request, tags) => {
             error_message: "Invalid birthday",
             regex: /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/,
         },
-        next_menu: "sport",
+        next: "sport",
     }
 
     return {
@@ -48,6 +49,7 @@ enq.addLocationProcessor('birthday', (request, tags) => {
 });
 
 enq.addLocationProcessor('sport', (request, tags) => {
+    console.log("tags", tags);
     tags['birthday'] = tags['birthday'].replace(/\//g, '-');
 
     const menu = {
@@ -63,7 +65,7 @@ enq.addLocationProcessor('sport', (request, tags) => {
                 ignore_case: false,
             }
         },
-        next_menu: "show_info",
+        next: "show_info",
     };
 
     return {

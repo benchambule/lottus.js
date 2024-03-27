@@ -64,7 +64,7 @@ createRequireBot = () => {
                 error: "Invalid name",
                 regex: /^.*$/,
             },
-            next_menu: "birthday",
+            next: "birthday",
         }
     
         return {
@@ -82,7 +82,7 @@ createRequireBot = () => {
                 error: "Invalid birthday",
                 regex: /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/,
             },
-            next_menu: "sport",
+            next: "sport",
         }
     
         return {
@@ -102,7 +102,7 @@ createRequireBot = () => {
                 error: "Invalid sport",
                 regex: /^[a-zA-Z]+$/,
             },
-            next_menu: "show_info",
+            next: "show_info",
         };
     
         return {
@@ -280,7 +280,7 @@ createInquiryBot = () => {
             name: 'main',
             title: "Welcome to Ben's bot",
             message: "Please provide your name",
-            next_menu: 'age'
+            next: 'age'
         }
 
         return {
@@ -294,7 +294,7 @@ createInquiryBot = () => {
             name: 'age',
             title: "Welcome to Ben's bot",
             message: "Please provide your age",
-            next_menu: 'show_info'
+            next: 'show_info'
         }
 
         tags['name'] = req.prompt;
@@ -338,8 +338,8 @@ createInterceptorsBot = () => {
             title: 'Welcome to Barbershop', 
             text: 'Select an option',
             options: [
-                {key: '1', label: 'Information', next_menu: 'info'},
-                {key: '2', label: 'Location', next_menu: 'location'},
+                {key: '1', label: 'Information', next: 'info'},
+                {key: '2', label: 'Location', next: 'location'},
             ]
         }
     
@@ -366,7 +366,7 @@ createInterceptorsBot = () => {
                 title: 'Location',
                 text: 'Barbershop location',
                 options: [
-                    {key: '0', label: 'Back', next_menu: 'main'}
+                    {key: '0', label: 'Back', next: 'main'}
                 ]
             }
         }

@@ -20,7 +20,7 @@ function createInquiryBot() {
             name: 'main',
             title: "Welcome to Ben's bot",
             message: "Please provide your name",
-            next_menu: 'age'
+            next: 'age'
         }
 
         return {
@@ -34,7 +34,7 @@ function createInquiryBot() {
             name: 'age',
             title: "Welcome to Ben's bot",
             message: "Please provide your age",
-            next_menu: 'show_info'
+            next: 'show_info'
         }
 
         tags['name'] = req.prompt;

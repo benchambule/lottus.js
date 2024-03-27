@@ -79,19 +79,19 @@ function process_required(request, tags, context){
 
     tags[required.name] = request.prompt;
 
-    const interceptor = context.bot.getLocationInterceptor(current_menu.next_menu);
+    const interceptor = context.bot.getLocationInterceptor(current_menu.next);
     if(interceptor){
         if(context.bot.debug){
-            console.log("Invoking interceptor for :", current_menu.next_menu);
+            console.log("Invoking interceptor for :", current_menu.next);
         }
         result = interceptor(request, tags, context);
     }
 
     if(!result){
-        const processor = context.bot.getLocationProcessor(current_menu.next_menu);
+        const processor = context.bot.getLocationProcessor(current_menu.next);
         if(processor){
             if(context.bot.debug){
-                console.log("Invoking processor for :", current_menu.next_menu);
+                console.log("Invoking processor for :", current_menu.next);
             }
             result = processor(request, tags, context);
         }
@@ -104,7 +104,8 @@ function process_required(request, tags, context){
         };
     }
 
-    return {menu: result.menu, tags: result.tags};
+    console.log("-->", tags, result.tags, {...tags, ...result.tags})
+    return {menu: result.menu, tags: {...tags, ...result.tags}};
 }
 
 
@@ -161,18 +162,17 @@ function inner_processor(bot, request){
 
     if(session){
         const current_menu = session.current_menu;
-        const interceptor = bot.getLocationInterceptor(current_menu.name);
-
         const context = {bot: bot, current_menu: session.current_menu};
 
+        const interceptor = bot.getLocationInterceptor("*");
         if(interceptor){
             if(bot.debug){
-                console.log("Invoking interceptor for :", current_menu.name);
+                console.log("Invoking interceptor for :", "*");
             }
             result = interceptor(request, session.tags, context);
         }
 
-        if(!result && current_menu.options){
+        if(current_menu.options && (!result || (result && result.menu && result.menu.name === current_menu.name))){
             if(bot.debug){
                 console.log("Processing options for :", current_menu.name);
             }
@@ -186,23 +186,25 @@ function inner_processor(bot, request){
             result = process_required(request, session.tags, context);
         }
 
-        if(!result || (result && result.menu && result.menu.name === current_menu.name)){
-            const interceptor = bot.getLocationInterceptor(current_menu.next_menu);
+        if(current_menu.next && (!result || (result && result.menu && result.menu.name === current_menu.name))){
+            const interceptor = bot.getLocationInterceptor(current_menu.next);
+
             if(interceptor){
                 if(bot.debug){
-                    console.log("Invoking interceptor for :", current_menu.next_menu);
+                    console.log("Invoking interceptor for :", current_menu.next);
                 }
                 result = interceptor(request, session.tags, context);
             }
-        }
 
-        if(!result){
-            const processor = bot.getLocationProcessor(current_menu.next_menu);
-            if(processor){
-                if(bot.debug){
-                    console.log("Invoking processor for :", current_menu.next_menu);
+            if(!result){
+                const processor = bot.getLocationProcessor(current_menu.next);
+
+                if(processor){
+                    if(bot.debug){
+                        console.log("Invoking processor for :", current_menu.next);
+                    }
+                    result = processor(request, session.tags, context);
                 }
-                result = processor(request, session.tags, context);
             }
         }
 

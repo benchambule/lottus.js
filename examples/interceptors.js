@@ -72,9 +72,6 @@ bot.addLocationInterceptor("*", function(req){
     }
 });
 
-console.log(bot.getLocationInterceptors());
-console.log(bot.getLocationProcessors());
-
 console.log(bot.process({msisdn: '123', prompt: '@barber'}));
 console.log(bot.process({msisdn: '123', prompt: 'hello'}));
 
