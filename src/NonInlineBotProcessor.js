@@ -6,12 +6,22 @@ function process_options(request, tags, context){
 
     for (const [, value] of Object.entries(context.current_menu.options)) {
         if(request.prompt.toString() === value.key.toString()){
+            request.selected_option = value;
+
             const interceptor = context.bot.getLocationInterceptor(value.menu);
             if(interceptor){
                 if(context.bot.debug){
                     console.log("Invoking interceptor for :", value.menu);
                 }
                 result = interceptor(request, tags, context);
+
+                if(result && result.request && !result.menu){
+                    if(context.bot.debug){
+                        console.log("Updating old request with new", result.request);
+                    }
+                    request = result.request;
+                    result = null;
+                }
             }
 
             if(!result){
@@ -85,6 +95,14 @@ function process_required(request, tags, context){
             console.log("Invoking interceptor for :", current_menu.next);
         }
         result = interceptor(request, tags, context);
+
+        if(result && result.request && !result.menu){
+            if(context.bot.debug){
+                console.log("Updating old request with new", result.request);
+            }
+            request = result.request;
+            result = null;
+        }
     }
 
     if(!result){
@@ -104,7 +122,6 @@ function process_required(request, tags, context){
         };
     }
 
-    console.log("-->", tags, result.tags, {...tags, ...result.tags})
     return {menu: result.menu, tags: {...tags, ...result.tags}};
 }
 
@@ -117,7 +134,7 @@ function inner_processor(bot, request){
     var menu = null;
     var session = null;
 
-    if (request.prompt === bot.keyword){
+    if (request.prompt && (request.prompt === bot.keyword || request.prompt.includes(bot.keyword))){
         const interceptor = bot.getLocationInterceptor(bot.entrypoint);
         const context = {bot: bot};
 
@@ -126,6 +143,14 @@ function inner_processor(bot, request){
                 console.log("Invoking interceptor for :", bot.entrypoint);
             }
             result = interceptor(request, null, context);
+
+            if(result && result.request && !result.menu){
+                if(bot.debug){
+                    console.log("Updating old request with new", result.request);
+                }
+                request = result.request;
+                result = null;
+            }
         }
 
         if(!result){
@@ -147,7 +172,7 @@ function inner_processor(bot, request){
                     msisdn: request.msisdn,
                     current_menu: result.menu,
                     location: result.menu.name,
-                    tags: []
+                    tags: result.tags? result.tags : []
                 }
             );
         }
@@ -170,6 +195,14 @@ function inner_processor(bot, request){
                 console.log("Invoking interceptor for :", "*");
             }
             result = interceptor(request, session.tags, context);
+
+            if(result && result.request && !result.menu){
+                if(bot.debug){
+                    console.log("Updating old request with new", result.request);
+                }
+                request = result.request;
+                result = null;
+            }
         }
 
         if(current_menu.options && (!result || (result && result.menu && result.menu.name === current_menu.name))){
@@ -194,6 +227,14 @@ function inner_processor(bot, request){
                     console.log("Invoking interceptor for :", current_menu.next);
                 }
                 result = interceptor(request, session.tags, context);
+
+                if(result && result.request && !result.menu){
+                    if(bot.debug){
+                        console.log("Updating old request with new", result.request);
+                    }
+                    request = result.request;
+                    result = null;
+                }
             }
 
             if(!result){
@@ -219,6 +260,7 @@ function inner_processor(bot, request){
             }
 
             if(result.tags){
+                
                 for (const [key, value] of Object.entries(result.tags)) {
                     session.tags[key] = value;
 
@@ -247,6 +289,13 @@ function process(bot, request){
 
     if(!result || !result.menu){
         return;
+    }
+
+    // if(!request.prompt){
+    //     return 
+    // }
+    if(!request.prompt){
+        request.prompt = "";
     }
 
     if(result && result.menu){

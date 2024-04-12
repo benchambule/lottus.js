@@ -8,6 +8,8 @@ class InMemorySessionManager{
 
     createNew(session){
         this.sessions.push(session);
+        
+        return session;
     }
 
     get(msisdn) {

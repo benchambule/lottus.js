@@ -2,7 +2,7 @@ const {Bot, App, InMemorySessionManager} = require('../index');
 
 var sessionManager = new InMemorySessionManager();
 
-createReverseBot = () => {
+const createReverseBot = () => {
     var reverse = new Bot(
         {
             name: "reverse", 
@@ -22,11 +22,11 @@ createReverseBot = () => {
             return {
                 menu: menu
             };
-        };
+        }
     });
     
     reverse.addLocationProcessor('main', function(request, context){
-        txt = request.lang == 'pt'? 'Frase invertida' : 'Reversed sentence';
+        const txt = request.lang == 'pt'? 'Frase invertida' : 'Reversed sentence';
         const prompt = request.prompt.replace(context.bot.keyword, "").trim();
         const menu = {
             title: txt,
@@ -42,7 +42,7 @@ createReverseBot = () => {
     return reverse;
 }
 
-createRequireBot = () => {
+const createRequireBot = () => {
     var enq = new Bot(
         {
             name: "enq-bot", 
@@ -126,7 +126,7 @@ createRequireBot = () => {
     return enq;
 }
 
-createMediaBot = () => {
+const createMediaBot = () => {
     var media = new Bot(
         {
             name: "media-bot", 
@@ -162,7 +162,7 @@ createMediaBot = () => {
     return media;
 }
 
-createOptionsBot = () => {
+const createOptionsBot = () => {
     var info = new Bot(
         {
             name: "info-bot", 
@@ -265,7 +265,7 @@ createOptionsBot = () => {
     return info;
 }
 
-createInquiryBot = () => {
+const createInquiryBot = () => {
     var bot = new Bot({
             name: 'enquiry-bot',
             entrypoint: 'main',
@@ -323,7 +323,7 @@ createInquiryBot = () => {
     return bot;
 }
 
-createInterceptorsBot = () => {
+const createInterceptorsBot = () => {
     var bot = new Bot({
         name: 'barber',
         entrypoint: 'main',
@@ -395,14 +395,14 @@ createInterceptorsBot = () => {
     return bot;
 }
 
-rev = createReverseBot();
-req = createRequireBot();
-med = createMediaBot();
-opt = createOptionsBot();
-enq = createInquiryBot();
-int = createInterceptorsBot();
+const rev = createReverseBot();
+const req = createRequireBot();
+const med = createMediaBot();
+const opt = createOptionsBot();
+const enq = createInquiryBot();
+const int = createInterceptorsBot();
 
-app = new App(sessionManager, ["!help"]);
+const app = new App(sessionManager, ["!help"]);
 app.addBot(rev);
 app.addBot(req);
 app.addBot(med);
