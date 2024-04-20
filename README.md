@@ -18,7 +18,7 @@ var reverse = new Bot(
     }
 );
 
-reverse.addLocationInterceptor('main', (request) => {
+reverse.intercept('main', (request) => {
     if(request.lang != 'pt'  && request.lang != 'en'){
         const menu = {
             title: 'lang cannot be ' +  "'" + request.lang+ "'" + ". lang should be 'en' or 'pt'",
@@ -30,7 +30,7 @@ reverse.addLocationInterceptor('main', (request) => {
     };
 });
 
-reverse.addLocationProcessor('main', function(request, context){
+reverse.at('main', function(request, context){
     txt = request.lang == 'pt'? 'Frase invertida' : 'Reversed sentence';
     const prompt = request.prompt.replace(context.bot.keyword, "").trim();
     const menu = {
@@ -97,9 +97,9 @@ var bot = new Bot(
     }
 );
 
-bot.addJSONMenus(menus);
+bot.addMenus(menus);
 
-bot.addLocationInterceptor('*', () => {
+bot.intercept('*', () => {
     return {
         menu: {
             name: "*-intercepted",
@@ -112,7 +112,7 @@ bot.addLocationInterceptor('*', () => {
     }
 });
 
-bot.addLocationInterceptor('welcome', () => {
+bot.intercept('welcome', () => {
     return {
         menu: {
             name: "welcome-intercepted",
