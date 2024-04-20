@@ -39,6 +39,15 @@ reverse = new Bot(
 );
 
 reverse.intercept('main', (request) => {
+    if(!request.lang){
+        console.log("request before", request);
+        request.lang = 'pt';
+        console.log("request after", request);
+        return {
+            request: request
+        }
+    }
+
     if(request.lang != 'pt'  && request.lang != 'en'){
         const menu = {
             title: 'lang cannot be ' +  "'" + request.lang+ "'" + ". lang should be 'en' or 'pt'",
@@ -51,6 +60,7 @@ reverse.intercept('main', (request) => {
 });
 
 reverse.at('main', function(request, context){
+    console.log(request);
     const txt = request.lang == 'pt'? 'Frase invertida' : 'Reversed sentence';
     const prompt = request.prompt.replace(context.bot.keyword, "").trim();
     const menu = {

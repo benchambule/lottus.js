@@ -24,6 +24,15 @@ var reverse = new Bot(
 );
 
 reverse.intercept('main', (request) => {
+    if(!request.lang){
+        console.log("request before", request);
+        request.lang = 'pt';
+        console.log("request after", request);
+        return {
+            request: request
+        }
+    }
+
     if(request.lang != 'pt'  && request.lang != 'en'){
         const menu = {
             title: 'lang cannot be ' +  "'" + request.lang+ "'" + ". lang should be 'en' or 'pt'",
@@ -32,11 +41,12 @@ reverse.intercept('main', (request) => {
         return {
             menu: menu
         };
-    };
+    }
 });
 
 reverse.at('main', function(request, context){
-    txt = request.lang == 'pt'? 'Frase invertida' : 'Reversed sentence';
+    console.log(request);
+    const txt = request.lang == 'pt'? 'Frase invertida' : 'Reversed sentence';
     const prompt = request.prompt.replace(context.bot.keyword, "").trim();
     const menu = {
         title: txt,
@@ -48,7 +58,6 @@ reverse.at('main', function(request, context){
         menu: menu
     };
 });
-
 
 console.log(reverse.process({msisdn: 123, prompt:"@reverse giberish"}));
 console.log(reverse.process({msisdn: 123, prompt:"@reverse bonjour le monde", lang:"fr"}));
