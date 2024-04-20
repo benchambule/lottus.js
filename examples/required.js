@@ -12,7 +12,7 @@ var enq = new Bot(
     }
 );
 
-enq.addLocationProcessor('name', (request, tags) => {
+enq.at('name', () => {
     const menu = {
         name: 'name',
         title: "Welcome to the enquiry bot",
@@ -30,7 +30,7 @@ enq.addLocationProcessor('name', (request, tags) => {
     };
 });
 
-enq.addLocationProcessor('birthday', (request, tags) => {
+enq.at('birthday', () => {
     const menu = {
         name: 'birthday',
         title: "Welcome to the enquiry bot",
@@ -48,7 +48,7 @@ enq.addLocationProcessor('birthday', (request, tags) => {
     };
 });
 
-enq.addLocationProcessor('sport', (request, tags) => {
+enq.at('sport', (request, tags) => {
     console.log("tags", tags);
     tags['birthday'] = tags['birthday'].replace(/\//g, '-');
 
@@ -73,7 +73,7 @@ enq.addLocationProcessor('sport', (request, tags) => {
     };
 });
 
-enq.addLocationProcessor('show_info', (request, tags) => {
+enq.at('show_info', () => {
     const txt = "Name: {{name}}\nBirthday: {{birthday}}\nFavourite sport: {{sport}}";
     const menu = {
         name: 'show_info',
@@ -86,8 +86,9 @@ enq.addLocationProcessor('show_info', (request, tags) => {
     };
 });
 
-console.log(enq.process({'msisdn': '123', "prompt": "@enq"}));
-console.log(enq.process({'msisdn': '123', "prompt": "Ben Chambule"}));
-console.log(enq.process({'msisdn': '123', "prompt": "23/04/1994"}));
-console.log(enq.process({'msisdn': '123', "prompt": "no-sport"}));
-console.log(enq.process({'msisdn': '123', "prompt": "Football"}));
+console.log("---------------------------------------------------------------");
+console.log({'msisdn': '123', "prompt": "@enq"}, enq.process({'msisdn': '123', "prompt": "@enq"}));
+console.log({'msisdn': '123', "prompt": "Ben Chambule"}, enq.process({'msisdn': '123', "prompt": "Ben Chambule"}));
+console.log({'msisdn': '123', "prompt": "23/04/1994"}, enq.process({'msisdn': '123', "prompt": "23/04/1994"}));
+console.log({'msisdn': '123', "prompt": "no-sport"}, enq.process({'msisdn': '123', "prompt": "no-sport"}));
+console.log({'msisdn': '123', "prompt": "Football"}, enq.process({'msisdn': '123', "prompt": "Football"}));

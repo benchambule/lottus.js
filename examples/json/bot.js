@@ -3,7 +3,7 @@ const {InMemorySessionManager} = require('../../index.js');
 
 var bot = createBotFromFile("./examples/json/bot.json", new InMemorySessionManager());
 
-bot.addLocationProcessor('language', function(){
+bot.at('language', function(){
     return {
         menu: {
             "name": "language",
@@ -16,6 +16,7 @@ bot.addLocationProcessor('language', function(){
     }
 });
 
-console.log(bot.process({msisdn:"1223", prompt: "@bot"}));
-console.log(bot.process({msisdn:"1223", prompt: "1"}));
-console.log(bot.process({msisdn:"1223", prompt: "4"}));
+console.log("---------------------------------------------------------------");
+console.log({msisdn:"1223", prompt: "@bot"}, bot.process({msisdn:"1223", prompt: "@bot"}));
+console.log({msisdn:"1223", prompt: "1"}, bot.process({msisdn:"1223", prompt: "1"}));
+console.log({msisdn:"1223", prompt: "4"}, bot.process({msisdn:"1223", prompt: "4"}));

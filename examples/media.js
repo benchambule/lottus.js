@@ -14,7 +14,7 @@ function randomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-media.addLocationProcessor('main', () => {
+media.at('main', () => {
     const menu = {
         name: 'main',
         title: "Welcome to Ben's bot",
@@ -32,4 +32,5 @@ media.addLocationProcessor('main', () => {
     };
 });
 
-console.log(media.process({msisdn: "123", prompt: "@media"}));
+console.log("---------------------------------------------------------------");
+console.log({msisdn: "123", prompt: "@media"}, media.process({msisdn: "123", prompt: "@media"}));

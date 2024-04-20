@@ -2,7 +2,7 @@
 
 /**
  * Starting point for the interaction with the Application. An application can have one or more bots
- * @param sessionManager {SessionManager} - The storage implementation which will be used.
+ * @param sessionManager {object} - The storage implementation which will be used. All bots of the app use the same sessionManager
  * @param help_prompts {Array} - when the user types one of these prompts, the help menu will be displayed. 
  * The help menu is a list of all bots available, with their descriptions
  */

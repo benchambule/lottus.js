@@ -1,3 +1,5 @@
+const assert = require('assert');
+
 const {Bot, App, InMemorySessionManager} = require('../index');
 
 var sessionManager = new InMemorySessionManager();
@@ -30,7 +32,7 @@ const createReverseBot = () => {
         const prompt = request.prompt.replace(context.bot.keyword, "").trim();
         const menu = {
             title: txt,
-            text: prompt.split("").reverse().join(""), 
+            message: prompt.split("").reverse().join(""), 
             final: true
         }
     
@@ -336,7 +338,7 @@ const createInterceptorsBot = () => {
        const menu = {
             name: 'main', 
             title: 'Welcome to Barbershop', 
-            text: 'Select an option',
+            message: 'Select an option',
             options: [
                 {key: '1', label: 'Information', next: 'info'},
                 {key: '2', label: 'Location', next: 'location'},
@@ -353,7 +355,7 @@ const createInterceptorsBot = () => {
             menu: {
                 name: 'info', 
                 title: 'Information', 
-                text: 'Barbershop info', 
+                message: 'Barbershop info', 
                 final: true
             }
         }
@@ -364,7 +366,7 @@ const createInterceptorsBot = () => {
             menu: {
                 name: 'location',
                 title: 'Location',
-                text: 'Barbershop location',
+                message: 'Barbershop location',
                 options: [
                     {key: '0', label: 'Back', next: 'main'}
                 ]
@@ -402,51 +404,20 @@ const opt = createOptionsBot();
 const enq = createInquiryBot();
 const int = createInterceptorsBot();
 
-const app = new App(sessionManager, ["!help"]);
-app.addBot(rev);
-app.addBot(req);
-app.addBot(med);
-app.addBot(opt);
-app.addBot(enq);
-app.addBot(int);
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '!help'}, app.process({msisdn: '123', prompt: '!help'}));
 
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '@media'}, app.process({msisdn: '123', prompt: '@media'}));
+describe('App', function() {
+    it('App must select the correct bot', function(){
+        const app = new App(sessionManager, ["!help"]);
 
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '@enq'}, app.process({msisdn: '123', prompt: '@enq'}));
-console.log({msisdn: '123', prompt: 'Ben Chambule'}, app.process({msisdn: '123', prompt: 'Ben Chambule'}));
-console.log({msisdn: '123', prompt: '30'}, app.process({msisdn: '123', prompt: '30'}));
+        app.addBot(rev);
+        app.addBot(req);
+        app.addBot(med);
+        app.addBot(opt);
+        app.addBot(enq);
+        app.addBot(int);
 
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '@enq'}, app.process({msisdn: '123', prompt: '@enq'}));
-console.log({msisdn: '123', prompt: 'Ben Chambule'}, app.process({msisdn: '123', prompt: 'Ben Chambule'}));
-
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '@reverse hello world', lang:'en'}, app.process({msisdn: '123', prompt: '@reverse hello world', lang:'en'}));
-
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '30'}, app.process({msisdn: '123', prompt: '30'}));
-
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '@enq'}, app.process({msisdn: '123', prompt: '@enq'}));
-
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: 'Ben Chambule'}, app.process({msisdn: '123', prompt: 'Ben Chambule'}));
-
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '@info'}, app.process({msisdn: '123', prompt: '@info'}));
-console.log({msisdn: '123', prompt: '1'}, app.process({msisdn: '123', prompt: '1'}));
-
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '@enq'}, app.process({msisdn: '123', prompt: '@enq'}));
-console.log({msisdn: '123', prompt: 'Ben Chambule'}, app.process({msisdn: '123', prompt: 'Ben Chambule'}));
-
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '@info'}, app.process({msisdn: '123', prompt: '@info'}));
-
-console.log("---------------------------------------------------------------");
-console.log({msisdn: '123', prompt: '@reverse hello world', lang:'en'}, app.process({msisdn: '123', prompt: '@reverse hello world', lang:'en'}));
-console.log({msisdn: '123', prompt: '1'}, app.process({msisdn: '123', prompt: '1'}));
+        assert.equal(app.process({msisdn:123, prompt:"@barber"}).message, "Select an option");
+        assert.equal(app.process({msisdn: '123', prompt: '@reverse dlrow olleh', lang:'en'}).message, "hello world");
+        assert.equal(app.process({msisdn:123, prompt:"@enq"}).message, "Please provide your name");
+    });
+});

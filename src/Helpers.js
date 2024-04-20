@@ -29,7 +29,7 @@ function createBotFromJSON(json, sessionManager){
     );
 
     menus.forEach(menu => {
-        bot.addLocationProcessor(menu.name, function(req, tags){
+        bot.at(menu.name, function(req, tags){
             if(menu.required && menu.required.regex){
                 menu.required.regex = new RegExp(menu.required.regex);
             }

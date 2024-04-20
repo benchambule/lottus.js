@@ -1,16 +1,15 @@
-'use strict';
+const assert = require('assert');
 
 const {Bot, InMemorySessionManager} = require('../index');
 
-var sessionManager = new InMemorySessionManager();
+const sessionManager = new InMemorySessionManager();
 
-function createInquiryBot() {
+const createInquiryBot = () => {
     var bot = new Bot({
             name: 'enquiry-bot',
             entrypoint: 'main',
             keyword: '@enq',
             inline: false,
-            debug: true,
             sessionManager : sessionManager
         }
     );
@@ -63,9 +62,14 @@ function createInquiryBot() {
     return bot;
 }
 
-const a = createInquiryBot();
+describe('Tags', function(){
+    it('should be able to store and retrieve tags', function(){
+        const bot = createInquiryBot();
 
-console.log("---------------------------------------------------------------");
-console.log({'msisdn': '123', "prompt": "@enq"}, a.process({'msisdn': '123', "prompt": "@enq"}));
-console.log({'msisdn': '123', "prompt": "Ben Chambule"}, a.process({'msisdn': '123', "prompt": "Ben Chambule"}));
-console.log({'msisdn': '123', "prompt": "30"}, a.process({'msisdn': '123', "prompt": "30"}));
+        bot.process({'msisdn': '123', "prompt": "@enq"});
+        bot.process({'msisdn': '123', "prompt": "Ben Chambule"});
+        const menu = bot.process({'msisdn': '123', "prompt": "30"});
+
+        assert.equal(menu.message, "Provided information\nName: Ben Chambule\nAge: 30");
+    });
+});

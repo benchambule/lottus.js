@@ -1,10 +1,16 @@
+/***
+ * Processes a request and returns a menu object
+ * @param {Bot} bot- the bot object
+ * @param {Map<string, string} request- the request object
+ * @returns {Map<string, object} - the menu object
+ */
 function process(bot, request) {
     if(bot.debug){
         console.log("Processing request: " + request);
     }
 
     if(request.prompt.includes(bot.keyword)){
-        const interceptor = bot.getLocationInterceptor(bot.entrypoint);
+        const interceptor = bot.getInterceptor(bot.entrypoint);
         var result = null;
         if(interceptor){
             if(bot.debug){
@@ -14,7 +20,7 @@ function process(bot, request) {
         }
         
         if(!result || !result.menu){
-            const processor = bot.getLocationProcessor(bot.entrypoint);
+            const processor = bot.getProcessor(bot.entrypoint);
             const context = {bot: bot};
 
             if(processor){

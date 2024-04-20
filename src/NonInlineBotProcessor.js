@@ -1,3 +1,10 @@
+/***
+ * Processes a menu with options
+ * @param request
+ * @param tags
+ * @param context
+ * @returns {*}
+ */
 function process_options(request, tags, context){
     if(context.bot.debug){
         console.log("Processing options request:", request, "with tags:", tags);
@@ -8,7 +15,7 @@ function process_options(request, tags, context){
         if(request.prompt.toString() === value.key.toString()){
             request.selected_option = value;
 
-            const interceptor = context.bot.getLocationInterceptor(value.menu);
+            const interceptor = context.bot.getInterceptor(value.menu);
             if(interceptor){
                 if(context.bot.debug){
                     console.log("Invoking interceptor for :", value.menu);
@@ -25,7 +32,7 @@ function process_options(request, tags, context){
             }
 
             if(!result){
-                const processor = context.bot.getLocationProcessor(value.menu);
+                const processor = context.bot.getProcessor(value.menu);
                 if(processor){
                     if(context.bot.debug){
                         console.log("Invoking processor for :", value.menu);
@@ -50,7 +57,13 @@ function process_options(request, tags, context){
     return {menu: result.menu, tags: result.tags};
 }
 
-
+/***
+ * Process a menu with required information
+ * @param request
+ * @param tags
+ * @param context
+ * @returns {*}
+ */
 function process_required(request, tags, context){
     if(context.bot.debug){
         console.log("Processing required request:", request, "with tags:", tags);
@@ -89,7 +102,7 @@ function process_required(request, tags, context){
 
     tags[required.name] = request.prompt;
 
-    const interceptor = context.bot.getLocationInterceptor(current_menu.next);
+    const interceptor = context.bot.getInterceptor(current_menu.next);
     if(interceptor){
         if(context.bot.debug){
             console.log("Invoking interceptor for :", current_menu.next);
@@ -106,7 +119,7 @@ function process_required(request, tags, context){
     }
 
     if(!result){
-        const processor = context.bot.getLocationProcessor(current_menu.next);
+        const processor = context.bot.getProcessor(current_menu.next);
         if(processor){
             if(context.bot.debug){
                 console.log("Invoking processor for :", current_menu.next);
@@ -135,7 +148,7 @@ function inner_processor(bot, request){
     var session = null;
 
     if (request.prompt && (request.prompt === bot.keyword || request.prompt.includes(bot.keyword))){
-        const interceptor = bot.getLocationInterceptor(bot.entrypoint);
+        const interceptor = bot.getInterceptor(bot.entrypoint);
         const context = {bot: bot};
 
         if(interceptor){
@@ -154,7 +167,7 @@ function inner_processor(bot, request){
         }
 
         if(!result){
-            const processor = bot.getLocationProcessor(bot.entrypoint);
+            const processor = bot.getProcessor(bot.entrypoint);
             if(processor){
                 if(bot.debug){
                     console.log("Invoking processor for :", bot.entrypoint);
@@ -189,7 +202,7 @@ function inner_processor(bot, request){
         const current_menu = session.current_menu;
         const context = {bot: bot, current_menu: session.current_menu};
 
-        const interceptor = bot.getLocationInterceptor("*");
+        const interceptor = bot.getInterceptor("*");
         if(interceptor){
             if(bot.debug){
                 console.log("Invoking interceptor for :", "*");
@@ -220,7 +233,7 @@ function inner_processor(bot, request){
         }
 
         if(current_menu.next && (!result || (result && result.menu && result.menu.name === current_menu.name))){
-            const interceptor = bot.getLocationInterceptor(current_menu.next);
+            const interceptor = bot.getInterceptor(current_menu.next);
 
             if(interceptor){
                 if(bot.debug){
@@ -238,7 +251,7 @@ function inner_processor(bot, request){
             }
 
             if(!result){
-                const processor = bot.getLocationProcessor(current_menu.next);
+                const processor = bot.getProcessor(current_menu.next);
 
                 if(processor){
                     if(bot.debug){
@@ -280,7 +293,12 @@ function inner_processor(bot, request){
     return null;
 }
 
-
+/**
+ * Processes a request with a bot
+ * @param {*} bot - the bot to process the request with
+ * @param {*} request - the request to process
+ * @returns {*}
+ */
 function process(bot, request){
     if(bot.debug){
         console.log("Processing request: ", request, "with bot:", bot.name);

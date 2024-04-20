@@ -45,9 +45,9 @@ function createBot(){
         }
     );
     
-    bot.addJSONMenus(menus);
+    bot.addMenus(menus);
     
-    bot.addLocationInterceptor('*', () => {
+    bot.intercept('*', () => {
         return {
             menu: {
                 name: "*-intercepted",
@@ -60,7 +60,7 @@ function createBot(){
         }
     });
     
-    bot.addLocationInterceptor('welcome', () => {
+    bot.intercept('welcome', () => {
         return {
             menu: {
                 name: "welcome-intercepted",
@@ -89,7 +89,7 @@ describe('interceptors', function() {
                 description: 'Display random divider'
             });
 
-            bot.addLocationInterceptor('divider', function(req){
+            bot.intercept('divider', function(req){
                 const reqs = req.prompt.trim().split(" ");
                 if(reqs.length < 3){
                     return {
@@ -108,7 +108,7 @@ describe('interceptors', function() {
                 }
             });
 
-            bot.addLocationProcessor('divider', function(req){
+            bot.at('divider', function(req){
                 const reqs = req.prompt.trim().split(" ");
 
                 const a = reqs[1];

@@ -11,7 +11,7 @@ var info = new Bot(
     }
 );
 
-info.addLocationProcessor('main', () => {
+info.at('main', () => {
     const menu = {
         name: 'main',
         title: "Welcome to Ben's bot",
@@ -28,7 +28,7 @@ info.addLocationProcessor('main', () => {
     };
 });
 
-info.addLocationProcessor('profession', () => {
+info.at('profession', () => {
     const menu = {
         name: 'profession',
         title: "Ben's profession",
@@ -42,7 +42,7 @@ info.addLocationProcessor('profession', () => {
     };
 });
 
-info.addLocationProcessor('name', (request, context) => {
+info.at('name', () => {
     const menu = {
         name: "name",
         title: "Ben's full name",
@@ -56,7 +56,7 @@ info.addLocationProcessor('name', (request, context) => {
     };
 });
 
-info.addLocationProcessor('age', () => {
+info.at('age', () => {
     const menu = {
         name: "age",
         title: "Ben's age",
@@ -70,7 +70,7 @@ info.addLocationProcessor('age', () => {
     };
 });
 
-info.addLocationProcessor('country', () => {
+info.at('country', () => {
     const menu = {
         name: "country",
         title: "Ben's country",
@@ -84,7 +84,7 @@ info.addLocationProcessor('country', () => {
     };
 });
 
-info.addLocationInterceptor('*', function(request, tags, ctxt){
+info.intercept('*', function(request, tags, ctxt){
     const session = ctxt.bot.sessionManager.get(request.msisdn);
     if(request.prompt.trim() === '@exit'){
         ctxt.bot.sessionManager.close(session);
@@ -96,8 +96,9 @@ info.addLocationInterceptor('*', function(request, tags, ctxt){
     }
 });
 
-console.log(info.process({msisdn: "123", prompt: "@info"}));
-console.log(info.process({msisdn: "123", prompt: "1"}));
-console.log(info.process({msisdn: "123", prompt: "0"}));
-console.log(info.process({msisdn: "123", prompt: "2"}));
-console.log(info.process({msisdn: "123", prompt: "@exit"}));
+console.log("---------------------------------------------------------------");
+console.log({msisdn: "123", prompt: "@info"}, info.process({msisdn: "123", prompt: "@info"}));
+console.log({msisdn: "123", prompt: "1"}, info.process({msisdn: "123", prompt: "1"}));
+console.log({msisdn: "123", prompt: "0"}, info.process({msisdn: "123", prompt: "0"}));
+console.log({msisdn: "123", prompt: "2"}, info.process({msisdn: "123", prompt: "2"}));
+console.log({msisdn: "123", prompt: "@exit"}, info.process({msisdn: "123", prompt: "@exit"}));

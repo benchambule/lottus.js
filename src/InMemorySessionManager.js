@@ -1,5 +1,4 @@
 'use strict';
-const Session = require('./Session');
 
 class InMemorySessionManager{
     constructor(){

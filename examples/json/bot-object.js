@@ -43,9 +43,9 @@ var bot = new Bot(
     }
 );
 
-bot.addJSONMenus(menus);
+bot.addMenus(menus);
 
-bot.addLocationInterceptor('*', () => {
+bot.intercept('*', () => {
     return {
         menu: {
             name: "*-intercepted",
@@ -58,7 +58,7 @@ bot.addLocationInterceptor('*', () => {
     }
 });
 
-bot.addLocationInterceptor('welcome', () => {
+bot.intercept('welcome', () => {
     return {
         menu: {
             name: "welcome-intercepted",
@@ -72,5 +72,6 @@ bot.addLocationInterceptor('welcome', () => {
     }
 });
 
-console.log(bot.process({msisdn:123, prompt:"@bot"}));
-console.log(bot.process({msisdn:123, prompt:"1"}));
+console.log("---------------------------------------------------------------");
+console.log({msisdn:123, prompt:"@bot"}, bot.process({msisdn:123, prompt:"@bot"}));
+console.log({msisdn:123, prompt:"1"}, bot.process({msisdn:123, prompt:"1"}));

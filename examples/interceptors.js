@@ -12,7 +12,7 @@ var bot = new Bot({
     sessionManager: sessionManager
 });
 
-bot.addLocationProcessor('main', function(req, tags, ctxt){
+bot.at('main', function(){
    const menu = {
         name: 'main', 
         title: 'Welcome to Barbershop', 
@@ -28,7 +28,7 @@ bot.addLocationProcessor('main', function(req, tags, ctxt){
     }
 });
 
-bot.addLocationProcessor('info', function(req, tags, ctxt){
+bot.at('info', function(){
     return {
         menu: {
             name: 'info', 
@@ -39,7 +39,7 @@ bot.addLocationProcessor('info', function(req, tags, ctxt){
     }
 });
 
-bot.addLocationProcessor('location', function(req, tags, ctxt){
+bot.at('location', function(){
     return {
         menu: {
             name: 'location',
@@ -52,7 +52,7 @@ bot.addLocationProcessor('location', function(req, tags, ctxt){
     }
 });
 
-bot.addLocationInterceptor('info', function(req){
+bot.intercept('info', function(req){
     if(req.prompt == 'hello'){
         return {
             message: 'Hi there',
@@ -61,7 +61,7 @@ bot.addLocationInterceptor('info', function(req){
     }
 });
 
-bot.addLocationInterceptor("*", function(req){
+bot.intercept("*", function(req){
     if(req.prompt == '.exit'){
         return {
             menu: {
