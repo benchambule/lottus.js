@@ -16,6 +16,7 @@ const nonInlineBotProcessor = require('./NonInlineBotProcessor')
 class Bot {
     #_processors = {};
     #_interceptors = {};
+    #_appContext;
 
     constructor(data){
         if(data){
@@ -55,6 +56,22 @@ class Bot {
      */
     setSessionManager(sessionManager){
         this.sessionManager = sessionManager;
+    }
+
+    getLocationProcessors(){
+        return this.#_processors;
+    }
+
+    getLocationInterceptors(){
+        return this.#_interceptors;
+    }
+
+    setAppContext(appContext){
+        this.#_appContext = appContext;
+    }
+
+    getAppContext(){
+        return this.#_appContext;
     }
 
     /**

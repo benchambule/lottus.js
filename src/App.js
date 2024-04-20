@@ -86,6 +86,7 @@ class App {
         if(keyword in this.keywords){
             const session = this.sessionManager.get(request.msisdn);
             const bot = this.getBot(this.keywords[keyword]);
+            bot.setAppContext(this);
 
             if(session && !bot.inline){
                 if(this.debug){
@@ -106,9 +107,18 @@ class App {
         }else{
             if(this.sessionManager){
                 const session = this.sessionManager.get(request.msisdn);
+                const ctxt = this;
 
                 if(session){
+                    // const current_menu = session.current_menu;
+                    // if(current_menu.redirect_to){
+                    //     const b = this.getBot(current_menu.redirect_to.bot);
+                    //     session.bot = current_menu.redirect_to.bot;
+                    //     session.location = current_menu.redirect_to.location;
+                    // };
+
                     const bot = this.getBot(session.bot);
+                    bot.setAppContext(this);
                     var result = null;
                     if(bot){
                         if(this.debug){
