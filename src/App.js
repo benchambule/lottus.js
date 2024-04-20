@@ -57,7 +57,7 @@ class App {
         }
 
         if(this.help_prompts.includes(request.prompt)) {
-            var message = "Available bots";
+            var message = "";
             
             for(const [key, value] of Object.entries(this.bots)){
                 var description = "";
@@ -70,8 +70,7 @@ class App {
             }
 
             return {
-                name: 'help_menu',
-                title: 'Help',
+                name: this.prompt,
                 message: message,
                 final: true
             }
