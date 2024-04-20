@@ -1,9 +1,14 @@
 # lottus.js
 =====================
 
+### Installation
+```bash
+npm i 'github:benchambule/lottus.js#main'  
+```
+
 ### Examples
 ---------------------
-``` {.sourceCode .javascript}
+```javascript
 'use strict';
 
 const {Bot} = require('lottus.js');
@@ -51,7 +56,7 @@ console.log(reverse.process({msisdn: 123, prompt:"@reverse ola mundo", lang:"pt"
 console.log(reverse.process({msisdn: 123, prompt:"@reverse hello world", lang:"en"}));
 ```
 
-``` {.sourceCode .javascript}
+```javascript
 'use strict';
 
 const {Bot, InMemorySessionManager} = require('lottus.js');
