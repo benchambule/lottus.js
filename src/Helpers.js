@@ -12,8 +12,6 @@ function createBotFromJSON(json, sessionManager){
     const inline = json['inline'];
     const menus = json['menus'];
     const description = json['description'];
-    const exitword = json['exitword'];
-    const exitpoint = json['exitpoint'];
 
     const bot = new Bot(
         {
@@ -23,8 +21,6 @@ function createBotFromJSON(json, sessionManager){
             inline: inline,
             sessionManager: inline?null:sessionManager,
             description: description,
-            exitpoint: exitpoint,
-            exitword: exitword
         }
     );
 

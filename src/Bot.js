@@ -11,8 +11,6 @@ const nonInlineBotProcessor = require('./NonInlineBotProcessor')
  * @param {boolean} inline - whether the bot is inline or not. Inline bots do not require context and just display information.
  * @param {SessionManager} sessionManager - the session storage to be used. Not required if bot is inline.
  * @param {string} description - the description of the bot.
- * @param {string} exitword - a word that kills the bot. Not required if bot is inline.
- * @param {string} exitpoint - a menu name that represents the goodbye message. Not required if bot is inline.
  */
 
 class Bot {
@@ -32,8 +30,6 @@ class Bot {
         this.inline = data.inline;
         this.sessionManager = data.sessionManager;
         this.description = data.description;
-        this.exitword = data.exitword;
-        this.exitpoint = data.exitpoint;
         this.debug = data.debug?true:false;
 
         if(!this.inline) {
@@ -41,14 +37,6 @@ class Bot {
 
             if(!this.invali_option_message){
                 this.invali_option_message = '❌ Invalid option. Please try again 🙃';
-            }
-
-            if(!data.exitpoint){
-                this.exitpoint = 'exit';
-            }
-
-            if(!data.exitword){
-                this.exitword = '@exit';
             }
         }
 

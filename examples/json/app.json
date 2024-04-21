@@ -11,8 +11,6 @@
             "keyword": "@bot",
             "entrypoint": "language",
             "description": "Ben's information bot",
-            "exitword": "@sair",
-            "exitpoint": "exit",
             "invalid_option_message": "Escolha inválida",
             "menus": [
                 {
