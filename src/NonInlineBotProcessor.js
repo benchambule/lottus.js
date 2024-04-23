@@ -177,8 +177,6 @@ function inner_processor(bot, request){
         }
 
         if(result && result.menu && !result.menu.final){
-            menu = result.menu;
-
             session = bot.sessionManager.createNew(
                 {
                     bot: bot.name,
@@ -190,6 +188,10 @@ function inner_processor(bot, request){
             );
         }
 
+        if(result && result.menu){
+            menu = result.menu;
+        }
+        
         return {menu: menu, session: session};
     }
 
