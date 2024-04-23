@@ -62,9 +62,7 @@ var reverse = new Bot(
 
 reverse.intercept('main', (request) => {
     if(!request.lang){
-        console.log("request before", request);
         request.lang = 'en';
-        console.log("request after", request);
         return {
             request: request
         }
@@ -82,7 +80,6 @@ reverse.intercept('main', (request) => {
 });
 
 reverse.at('main', function(request, context){
-    console.log(request);
     const txt = request.lang == 'pt'? 'Frase invertida' : 'Reversed sentence';
     const prompt = request.prompt.replace(context.bot.keyword, "").trim();
     const menu = {

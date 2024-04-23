@@ -49,7 +49,6 @@ enq.at('birthday', () => {
 });
 
 enq.at('sport', (request, tags) => {
-    console.log("tags", tags);
     tags['birthday'] = tags['birthday'].replace(/\//g, '-');
 
     const menu = {
@@ -89,6 +88,7 @@ enq.at('show_info', () => {
 console.log("---------------------------------------------------------------");
 console.log({'msisdn': '123', "prompt": "@enq"}, enq.process({'msisdn': '123', "prompt": "@enq"}));
 console.log({'msisdn': '123', "prompt": "Ben Chambule"}, enq.process({'msisdn': '123', "prompt": "Ben Chambule"}));
+console.log({'msisdn': '123', "prompt": "23/04/1994"}, enq.process({'msisdn': '123', "prompt": "23/04"})); // Will fail
 console.log({'msisdn': '123', "prompt": "23/04/1994"}, enq.process({'msisdn': '123', "prompt": "23/04/1994"}));
-console.log({'msisdn': '123', "prompt": "no-sport"}, enq.process({'msisdn': '123', "prompt": "no-sport"}));
+console.log({'msisdn': '123', "prompt": "no-sport"}, enq.process({'msisdn': '123', "prompt": "no-sport"})); // Will fail
 console.log({'msisdn': '123', "prompt": "Football"}, enq.process({'msisdn': '123', "prompt": "Football"}));
