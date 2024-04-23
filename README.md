@@ -113,33 +113,6 @@ var bot = new Bot(
 
 bot.addMenus(menus);
 
-bot.intercept('*', () => {
-    return {
-        menu: {
-            name: "*-intercepted",
-            title: "*-Intercepted",
-            message: "*-Intercepted",
-            options: [
-                {key:0, label:"Voltar", menu:"welcome"}
-            ]
-        }
-    }
-});
-
-bot.intercept('welcome', () => {
-    return {
-        menu: {
-            name: "welcome-intercepted",
-            title: "Welcome-Intercepted",
-            message: "Welcome-Intercepted",
-            options: [
-                {key:1, label:"English", menu:"english"},
-                {key:2, label:"Portugues", menu:"portuguese"},
-            ]
-        }
-    }
-});
-
 console.log(bot.process({msisdn:123, prompt:"@bot"}));
 console.log(bot.process({msisdn:123, prompt:"1"}));
 ```
