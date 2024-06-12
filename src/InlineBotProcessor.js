@@ -66,7 +66,16 @@ function process(bot, request) {
             }
     
             result.menu.final = true;
-            return result.menu;
+            let session = {
+                bot: bot.name,
+                msisdn: request.msisdn,
+                location: result.menu.name,
+                active: false,
+                menu: result.menu
+            }
+            console.log(session);
+
+            return session;
         }
     }
 

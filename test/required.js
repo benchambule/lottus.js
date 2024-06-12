@@ -2,8 +2,6 @@ const assert = require('assert');
 
 const {Bot, InMemorySessionManager} = require('../index');
 
-const sessionManager = new InMemorySessionManager();
-
 const createRequireBot = () => {
     var enq = new Bot(
         {
@@ -12,7 +10,6 @@ const createRequireBot = () => {
             keyword: "@enq", 
             inline: false, 
             description: "This is an enquiry bot",
-            sessionManager: sessionManager
         }
     );
     
@@ -92,11 +89,11 @@ describe('Required', () => {
     it('It should store and retrieve required info as tags', async () => {
         const enq = createRequireBot();
         
-        enq.process({'msisdn': '123', "prompt": "@enq"});
-        enq.process({'msisdn': '123', "prompt": "Ben Chambule"});
-        enq.process({'msisdn': '123', "prompt": "23/04/1994"});
-        enq.process({'msisdn': '123', "prompt": "no-sport"});
-        const menu = enq.process({'msisdn': '123', "prompt": "Football"});
+        let session = enq.process({'msisdn': '123', "prompt": "@enq"});
+        session = enq.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+        session = enq.process({'msisdn': '123', "prompt": "23/04/1994"}, session);
+        session = enq.process({'msisdn': '123', "prompt": "no-sport"}, session);
+        const menu = enq.process({'msisdn': '123', "prompt": "Football"}, session).menu;
 
         assert.equal(menu.message, "Name: Ben Chambule\nBirthday: 23-04-1994\nFavourite sport: Football");
     });

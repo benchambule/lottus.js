@@ -27,6 +27,6 @@ describe('Inline bots', function() {
         });
 
         const result = bot.process({msisdn: '123', prompt:"@adder 10 20"});
-        assert.equal(result.message, "10 + 20 = 30");
+        assert.equal(result.menu.message, "10 + 20 = 30");
     });
 });

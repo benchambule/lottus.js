@@ -22,10 +22,6 @@ class InMemorySessionManager{
         return session;
     }
 
-    set(session) {
-        this.sessions.push(session);
-    }
-
     close(session){
         const testing = (e) => e.msisdn === session.msisdn;
 

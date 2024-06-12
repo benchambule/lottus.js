@@ -73,5 +73,7 @@ bot.intercept('welcome', () => {
 });
 
 console.log("---------------------------------------------------------------");
-console.log({msisdn:123, prompt:"@bot"}, bot.process({msisdn:123, prompt:"@bot"}));
-console.log({msisdn:123, prompt:"1"}, bot.process({msisdn:123, prompt:"1"}));
+var session = bot.process({msisdn:123, prompt:"@bot"});
+console.log({msisdn:123, prompt:"@bot"}, session);
+session = bot.process({msisdn:123, prompt:"1"}, session);
+console.log({msisdn:123, prompt:"1"}, session);

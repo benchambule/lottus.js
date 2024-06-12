@@ -7,9 +7,7 @@
  * The help menu is a list of all bots available, with their descriptions
  */
 class App {
-    constructor(sessionManager, help_prompts = ['!help', '!ajuda'], debug = false){
-        this.sessionManager = sessionManager;
-
+    constructor(help_prompts = ['!help', '!ajuda'], debug = false){
         this.bots = {};
         this.keywords = {};
         this.help_prompts = help_prompts;
@@ -86,7 +84,6 @@ class App {
         if(keyword in this.keywords){
             const session = this.sessionManager.get(request.msisdn);
             const bot = this.getBot(this.keywords[keyword]);
-            bot.setAppContext(this);
 
             if(session && !bot.inline){
                 if(this.debug){
@@ -105,31 +102,16 @@ class App {
             
             return result;
         }else{
-            if(this.sessionManager){
-                const session = this.sessionManager.get(request.msisdn);
-                const ctxt = this;
+            const bot = this.getBot(session.bot);
 
-                if(session){
-                    // const current_menu = session.current_menu;
-                    // if(current_menu.redirect_to){
-                    //     const b = this.getBot(current_menu.redirect_to.bot);
-                    //     session.bot = current_menu.redirect_to.bot;
-                    //     session.location = current_menu.redirect_to.location;
-                    // };
-
-                    const bot = this.getBot(session.bot);
-                    bot.setAppContext(this);
-                    var result = null;
-                    if(bot){
-                        if(this.debug){
-                            console.log("Processing request ", request, "with bot", bot.name);
-                        }
-                        result = bot.process(request);  
-                    }
-                    
-                    return result;
+            if(bot){
+                if(this.debug){
+                    console.log("Processing request ", request, "with bot", bot.name);
                 }
+                result = bot.process(request);  
             }
+            
+            return result;
         }
     }
 }

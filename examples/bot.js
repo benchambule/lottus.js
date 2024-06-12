@@ -1,4 +1,4 @@
-const {Bot} = require('../index');
+const {Bot, InMemorySessionManager} = require('../index');
 
 var info = new Bot(
     {
@@ -7,6 +7,7 @@ var info = new Bot(
         keyword: "@info", 
         inline: false, 
         description: "Reverses a provided string",
+        sessionManager: new InMemorySessionManager(),
     }
 );
 
@@ -84,28 +85,36 @@ info.at('country', () => {
 });
 
 info.intercept('*', function(request, tags, ctxt){
+    const session = ctxt.bot.sessionManager.get(request.msisdn);
     if(request.prompt.trim() === '@exit'){
+        ctxt.bot.sessionManager.close(session);
         return {
             menu: {
                 title: "Thank you for using Ben's bot",
-                final: true
             }
         }
     }
 });
 
-console.log("---------------------------------------------------------------");
 var session = info.process({msisdn: "123", prompt: "@info"});
-console.log({msisdn: "123", prompt: "@info"}, session.menu);
+console.log(session);
 
 session = info.process({msisdn: "123", prompt: "1"}, session);
-console.log({msisdn: "123", prompt: "1"}, session.menu);
+console.log(session);
 
 session = info.process({msisdn: "123", prompt: "0"}, session);
-console.log({msisdn: "123", prompt: "0"}, session.menu);
+console.log(session);
 
 session = info.process({msisdn: "123", prompt: "2"}, session);
-console.log({msisdn: "123", prompt: "2"}, session.menu);
+console.log(session);
 
 session = info.process({msisdn: "123", prompt: "@exit"}, session);
-console.log({msisdn: "123", prompt: "@exit"}, session);
+console.log(session);
+
+
+// console.log("---------------------------------------------------------------");
+// console.log({msisdn: "123", prompt: "@info"}, info.process({msisdn: "123", prompt: "@info"}));
+// console.log({msisdn: "123", prompt: "1"}, info.process({msisdn: "123", prompt: "1"}));
+// console.log({msisdn: "123", prompt: "0"}, info.process({msisdn: "123", prompt: "0"}));
+// console.log({msisdn: "123", prompt: "2"}, info.process({msisdn: "123", prompt: "2"}));
+// console.log({msisdn: "123", prompt: "@exit"}, info.process({msisdn: "123", prompt: "@exit"}));

@@ -4,7 +4,7 @@ const fs = require('fs');
 const App = require('./App');
 const Bot = require('./Bot');
 
-function createBotFromJSON(json, sessionManager){
+function createBotFromJSON(json){
 
     const entrypoint = json['entrypoint'];
     const keyword = json['keyword'];
@@ -19,7 +19,6 @@ function createBotFromJSON(json, sessionManager){
             entrypoint: entrypoint,
             keyword: keyword,
             inline: inline,
-            sessionManager: inline?null:sessionManager,
             description: description,
         }
     );
@@ -56,12 +55,12 @@ function createAppFromJSON(json, sessionManager){
 }
 
 
-function createBotFromFile(filename, sessionManager){
+function createBotFromFile(filename){
     const file_contents = fs.readFileSync(filename, 'utf8');
 
     const json = JSON.parse(file_contents);
 
-    return createBotFromJSON(json, sessionManager);
+    return createBotFromJSON(json);
 }
 
 

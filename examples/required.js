@@ -1,4 +1,4 @@
-const {Bot, InMemorySessionManager} = require('../index');
+const {Bot} = require('../index');
 
 var enq = new Bot(
     {
@@ -7,7 +7,6 @@ var enq = new Bot(
         keyword: "@enq", 
         inline: false, 
         description: "This is an enquiry bot",
-        sessionManager: new InMemorySessionManager(),
         debug: false
     }
 );
@@ -86,9 +85,20 @@ enq.at('show_info', () => {
 });
 
 console.log("---------------------------------------------------------------");
-console.log({'msisdn': '123', "prompt": "@enq"}, enq.process({'msisdn': '123', "prompt": "@enq"}));
-console.log({'msisdn': '123', "prompt": "Ben Chambule"}, enq.process({'msisdn': '123', "prompt": "Ben Chambule"}));
-console.log({'msisdn': '123', "prompt": "23/04/1994"}, enq.process({'msisdn': '123', "prompt": "23/04"})); // Will fail
-console.log({'msisdn': '123', "prompt": "23/04/1994"}, enq.process({'msisdn': '123', "prompt": "23/04/1994"}));
-console.log({'msisdn': '123', "prompt": "no-sport"}, enq.process({'msisdn': '123', "prompt": "no-sport"})); // Will fail
-console.log({'msisdn': '123', "prompt": "Football"}, enq.process({'msisdn': '123', "prompt": "Football"}));
+var session = enq.process({'msisdn': '123', "prompt": "@enq"});
+console.log({'msisdn': '123', "prompt": "@enq"}, session);
+
+session = enq.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+console.log({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+
+session = enq.process({'msisdn': '123', "prompt": "23/04"}, session);
+console.log({'msisdn': '123', "prompt": "23/04"}, session); // Will fail
+
+session = enq.process({'msisdn': '123', "prompt": "23/04/1994"}, session);
+console.log({'msisdn': '123', "prompt": "23/04/1994"}, session);
+
+session = enq.process({'msisdn': '123', "prompt": "no-sport"}, session);
+console.log({'msisdn': '123', "prompt": "no-sport"}, session); // Will fail
+
+session = enq.process({'msisdn': '123', "prompt": "Football"}, session);
+console.log({'msisdn': '123', "prompt": "Football"}, session);

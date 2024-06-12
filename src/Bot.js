@@ -9,14 +9,13 @@ const nonInlineBotProcessor = require('./NonInlineBotProcessor')
  * @param {string} entrypoint - the entrypoint of the bot. This can be a menu name or a processor name.
  * @param {string} keyword - the keyword to start the bot.
  * @param {boolean} inline - whether the bot is inline or not. Inline bots do not require context and just display information.
- * @param {SessionManager} sessionManager - the session storage to be used. Not required if bot is inline.
  * @param {string} description - the description of the bot.
  */
 
 class Bot {
-    #_processors = {};
-    #_interceptors = {};
-    #_appContext;
+    // #_processors = {};
+    // #_interceptors = {};
+    // #_appContext;
 
     constructor(data){
         if(data){
@@ -25,11 +24,12 @@ class Bot {
     }
 
     _initialize(data){
+        this.processors = {};
+        this.interceptors = {};
         this.name = data.name;
         this.entrypoint = data.entrypoint;
         this.keyword = data.keyword;
         this.inline = data.inline;
-        this.sessionManager = data.sessionManager;
         this.description = data.description;
         this.debug = data.debug?true:false;
 
@@ -50,28 +50,12 @@ class Bot {
         }
     }
 
-    /**
-     * Set's the session storage
-     * @param {SessionManager} - the object that will be used to store the sessions.
-     */
-    setSessionManager(sessionManager){
-        this.sessionManager = sessionManager;
-    }
-
     getLocationProcessors(){
-        return this.#_processors;
+        return this.processors;
     }
 
     getLocationInterceptors(){
-        return this.#_interceptors;
-    }
-
-    setAppContext(appContext){
-        this.#_appContext = appContext;
-    }
-
-    getAppContext(){
-        return this.#_appContext;
+        return this.interceptors;
     }
 
     /**
@@ -118,7 +102,7 @@ class Bot {
      * });
      */
     at(location, processor){
-        this.#_processors[location] = processor;
+        this.processors[location] = processor;
     }
 
     /***
@@ -155,7 +139,7 @@ class Bot {
      *  });
      */
     intercept(location, interceptor){
-        this.#_interceptors[location] = interceptor;
+        this.interceptors[location] = interceptor;
     }
 
     /**
@@ -209,10 +193,10 @@ class Bot {
      * @returns {function}
      */
     getInterceptor(location){
-        var interceptor = this.#_interceptors[location];
+        var interceptor = this.interceptors[location];
 
         if(!interceptor){
-            interceptor = this.#_interceptors["*"];
+            interceptor = this.interceptors["*"];
         }
 
         return interceptor;
@@ -224,8 +208,8 @@ class Bot {
      * @param {object} request - the request details. The minimum request object has the following definition {msisdn: 'msisdn', prompt: 'prompt'}.
      * @returns {Map<string, object} - the menu object, or null if no Menu was generated.
      */
-    process(request){
-        return this.processor(this, request);
+    process(request, session = null){
+        return this.processor(this, request, session);
     }
 
     /**
@@ -234,8 +218,8 @@ class Bot {
      * @returns 
      */
     getProcessor(location){
-        if(this.#_processors){
-            return this.#_processors[location];
+        if(this.processors){
+            return this.processors[location];
         }else{
             return null
         }

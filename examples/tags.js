@@ -1,8 +1,6 @@
 'use strict';
 
-const {Bot, InMemorySessionManager} = require('../index');
-
-var sessionManager = new InMemorySessionManager();
+const {Bot} = require('../index');
 
 function createInquiryBot() {
     var bot = new Bot({
@@ -10,8 +8,7 @@ function createInquiryBot() {
             entrypoint: 'main',
             keyword: '@enq',
             inline: false,
-            debug: true,
-            sessionManager : sessionManager
+            debug: true
         }
     );
 
@@ -66,6 +63,11 @@ function createInquiryBot() {
 const a = createInquiryBot();
 
 console.log("---------------------------------------------------------------");
-console.log({'msisdn': '123', "prompt": "@enq"}, a.process({'msisdn': '123', "prompt": "@enq"}));
-console.log({'msisdn': '123', "prompt": "Ben Chambule"}, a.process({'msisdn': '123', "prompt": "Ben Chambule"}));
-console.log({'msisdn': '123', "prompt": "30"}, a.process({'msisdn': '123', "prompt": "30"}));
+var session = a.process({'msisdn': '123', "prompt": "@enq"}, null);
+console.log({'msisdn': '123', "prompt": "@enq"}, session);
+
+session = a.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+console.log({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+
+session = a.process({'msisdn': '123', "prompt": "30"}, session);
+console.log({'msisdn': '123', "prompt": "30"}, session);

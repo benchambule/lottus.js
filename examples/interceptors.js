@@ -1,15 +1,12 @@
 'use strict';
 
-const {Bot, InMemorySessionManager} = require('../index');
-
-var sessionManager = new InMemorySessionManager();
+const {Bot} = require('../index');
 
 var bot = new Bot({
     name: 'barber',
     entrypoint: 'main',
     keyword: '@barber',
-    inline: false,
-    sessionManager: sessionManager
+    inline: false
 });
 
 bot.at('main', function(){
@@ -72,14 +69,26 @@ bot.intercept("*", function(req){
     }
 });
 
-console.log(bot.process({msisdn: '123', prompt: '@barber'}));
-console.log(bot.process({msisdn: '123', prompt: 'hello'}));
+var session = bot.process({msisdn: '123', prompt: '@barber'});
+console.log(session.menu);
 
-console.log(bot.process({msisdn: '123', prompt: '@barber'}));
-console.log(bot.process({msisdn: '123', prompt: '.exit'}));
+session = bot.process({msisdn: '123', prompt: 'hello'}, session);
+console.log(session.menu);
 
-console.log(bot.process({msisdn: '123', prompt: '@barber'}));
-console.log(bot.process({msisdn: '123', prompt: '1'}));
+session = bot.process({msisdn: '123', prompt: '@barber'}, session);
+console.log(session.menu);
 
-console.log(bot.process({msisdn: '123', prompt: '@barber'}));
-console.log(bot.process({msisdn: '123', prompt: '2'}));
+session = bot.process({msisdn: '123', prompt: '.exit'}, session);
+console.log(session.menu);
+
+session = bot.process({msisdn: '123', prompt: '@barber'}, session);
+console.log(session.menu);
+
+session = bot.process({msisdn: '123', prompt: '1'}, session);
+console.log(session.menu);
+
+session = bot.process({msisdn: '123', prompt: '@barber'}, session);
+console.log(session.menu);
+
+session = bot.process({msisdn: '123', prompt: '2'}, session);
+console.log(session.menu);

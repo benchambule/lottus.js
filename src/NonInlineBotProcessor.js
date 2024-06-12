@@ -11,7 +11,7 @@ function process_options(request, tags, context){
     }
     var result = null;
 
-    for (const [, value] of Object.entries(context.current_menu.options)) {
+    for (const [, value] of Object.entries(context.menu.options)) {
         if(request.prompt.toString() === value.key.toString()){
             request.selected_option = value;
 
@@ -46,7 +46,7 @@ function process_options(request, tags, context){
     }
 
     if(!result){
-        var current_menu = context.current_menu;
+        var current_menu = context.menu;
         current_menu.message = context.invali_option_message;
 
         return {
@@ -69,7 +69,7 @@ function process_required(request, tags, context){
         console.log("Processing required request:", request, "with tags:", tags);
     }
     var result = null;
-    const current_menu = context.current_menu;
+    const current_menu = context.menu;
 
     const required = current_menu.required;
     var menu = null;
@@ -139,13 +139,13 @@ function process_required(request, tags, context){
 }
 
 
-function inner_processor(bot, request){
+function inner_processor(bot, request, session){
     if(bot.debug){
         console.log("Processing request:", request);
     }
     var result = null;
     var menu = null;
-    var session = null;
+    // var session = null;
 
     if (request.prompt && (request.prompt === bot.keyword || request.prompt.includes(bot.keyword))){
         const interceptor = bot.getInterceptor(bot.entrypoint);
@@ -173,19 +173,24 @@ function inner_processor(bot, request){
                     console.log("Invoking processor for :", bot.entrypoint);
                 }
                 result = processor(request, null, context);
+                if(bot.debug){
+                    console.log("Result :", result);
+                }
             }
         }
 
         if(result && result.menu && !result.menu.final){
-            session = bot.sessionManager.createNew(
-                {
-                    bot: bot.name,
-                    msisdn: request.msisdn,
-                    current_menu: result.menu,
-                    location: result.menu.name,
-                    tags: result.tags? result.tags : []
-                }
-            );
+            if(bot.debug){
+                console.log("Initializing session");
+            }
+            session = {
+                bot: bot.name,
+                msisdn: request.msisdn,
+                current_menu: result.menu,
+                location: result.menu.name,
+                tags: result.tags? result.tags : [],
+                active: true
+            };
         }
 
         if(result && result.menu){
@@ -195,14 +200,14 @@ function inner_processor(bot, request){
         return {menu: menu, session: session};
     }
 
-    session = bot.sessionManager.get(request.msisdn);
+    // session = bot.sessionManager.get(request.msisdn);
     if(!session){
         console.log("Session for msisdn", request.msisdn, 'not found!')
     }
 
     if(session){
-        const current_menu = session.current_menu;
-        const context = {bot: bot, current_menu: session.current_menu};
+        const current_menu = session.menu;
+        const context = {bot: bot, menu: current_menu};
 
         const interceptor = bot.getInterceptor("*");
         if(interceptor){
@@ -301,19 +306,16 @@ function inner_processor(bot, request){
  * @param {*} request - the request to process
  * @returns {*}
  */
-function process(bot, request){
+function process(bot, request, session){
     if(bot.debug){
         console.log("Processing request: ", request, "with bot:", bot.name);
     }
-    var result = inner_processor(bot, request);
+    var result = inner_processor(bot, request, session);
 
     if(!result || !result.menu){
         return;
     }
 
-    // if(!request.prompt){
-    //     return 
-    // }
     if(!request.prompt){
         request.prompt = "";
     }
@@ -353,14 +355,15 @@ function process(bot, request){
     }
 
     if(result.session){
-        result.session.current_menu = result.menu;
-        bot.sessionManager.update(result.session);
+        result.session.menu = result.menu;
+        result.session.active = !result.menu.final;
     }
 
     if(bot.debug){
         console.log("Result from processing request:", request, 'is menu:', result.menu.name);
     }
-    return result.menu
+
+    return result.session;
 }
 
 module.exports = process;
