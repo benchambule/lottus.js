@@ -1,7 +1,6 @@
 'use strict';
 
 const fs = require('fs');
-const App = require('./App');
 const Bot = require('./Bot');
 
 function createBotFromJSON(json){
@@ -40,21 +39,6 @@ function createBotFromJSON(json){
 }
 
 
-function createAppFromJSON(json, sessionManager){
-    var app = new App(sessionManager);
-
-    const bots = json['bots'];
-
-    bots.forEach(bot => {
-        const _bot = createBotFromJSON(bot, sessionManager);
-
-        app.addBot(_bot);
-    });
-
-    return app;
-}
-
-
 function createBotFromFile(filename){
     const file_contents = fs.readFileSync(filename, 'utf8');
 
@@ -64,17 +48,7 @@ function createBotFromFile(filename){
 }
 
 
-function createAppFromFile(filename, sessionManager){
-    const file_contents = fs.readFileSync(filename, 'utf8');
-
-    const json = JSON.parse(file_contents);
-
-    return createAppFromJSON(json, sessionManager);
-}
-
 module.exports = {
     createBotFromFile: createBotFromFile,
-    createAppFromFile: createAppFromFile,
     createBotFromJSON: createBotFromJSON,
-    createAppFromJSON: createAppFromJSON
 }
