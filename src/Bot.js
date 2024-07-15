@@ -224,7 +224,7 @@ class Bot {
      * @param {object} request - the request details. The minimum request object has the following definition {msisdn: 'msisdn', prompt: 'prompt'}.
      * @returns {Map<string, object} - the menu object, or null if no Menu was generated.
      */
-    process(request){
+    async process(request){
         return this.processor(this, request);
     }
 

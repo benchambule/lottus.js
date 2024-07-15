@@ -5,7 +5,7 @@
  * @param context
  * @returns {*}
  */
-function process_options(request, tags, context){
+async function process_options(request, tags, context){
     if(context.bot.debug){
         console.log("Processing options request:", request, "with tags:", tags);
     }
@@ -20,7 +20,7 @@ function process_options(request, tags, context){
                 if(context.bot.debug){
                     console.log("Invoking interceptor for :", value.menu);
                 }
-                result = interceptor(request, tags, context);
+                result = await interceptor(request, tags, context);
 
                 if(result && result.request && !result.menu){
                     if(context.bot.debug){
@@ -37,7 +37,7 @@ function process_options(request, tags, context){
                     if(context.bot.debug){
                         console.log("Invoking processor for :", value.menu);
                     }
-                    result = processor(request, tags, context);
+                    result = await processor(request, tags, context);
                 }
             }
 
@@ -64,7 +64,7 @@ function process_options(request, tags, context){
  * @param context
  * @returns {*}
  */
-function process_required(request, tags, context){
+async function process_required(request, tags, context){
     if(context.bot.debug){
         console.log("Processing required request:", request, "with tags:", tags);
     }
@@ -107,7 +107,7 @@ function process_required(request, tags, context){
         if(context.bot.debug){
             console.log("Invoking interceptor for :", current_menu.next);
         }
-        result = interceptor(request, tags, context);
+        result = await interceptor(request, tags, context);
 
         if(result && result.request && !result.menu){
             if(context.bot.debug){
@@ -124,7 +124,7 @@ function process_required(request, tags, context){
             if(context.bot.debug){
                 console.log("Invoking processor for :", current_menu.next);
             }
-            result = processor(request, tags, context);
+            result = await processor(request, tags, context);
         }
     }
 
@@ -139,7 +139,7 @@ function process_required(request, tags, context){
 }
 
 
-function inner_processor(bot, request){
+async function inner_processor(bot, request){
     if(bot.debug){
         console.log("Processing request:", request);
     }
@@ -155,7 +155,7 @@ function inner_processor(bot, request){
             if(bot.debug){
                 console.log("Invoking interceptor for :", bot.entrypoint);
             }
-            result = interceptor(request, null, context);
+            result = await interceptor(request, null, context);
 
             if(result && result.request && !result.menu){
                 if(bot.debug){
@@ -172,7 +172,7 @@ function inner_processor(bot, request){
                 if(bot.debug){
                     console.log("Invoking processor for :", bot.entrypoint);
                 }
-                result = processor(request, null, context);
+                result = await processor(request, null, context);
             }
         }
 
@@ -209,7 +209,7 @@ function inner_processor(bot, request){
             if(bot.debug){
                 console.log("Invoking interceptor for :", "*");
             }
-            result = interceptor(request, session.tags, context);
+            result = await interceptor(request, session.tags, context);
 
             if(result && result.request && !result.menu){
                 if(bot.debug){
@@ -224,14 +224,14 @@ function inner_processor(bot, request){
             if(bot.debug){
                 console.log("Processing options for :", current_menu.name);
             }
-            result = process_options(request, session.tags, context);
+            result = await process_options(request, session.tags, context);
         }
 
         if(current_menu.required && (!result || (result && result.menu && result.menu.name === current_menu.name))){
             if(bot.debug){
                 console.log("Processing required for :", current_menu.name);
             }
-            result = process_required(request, session.tags, context);
+            result = await process_required(request, session.tags, context);
         }
 
         if(current_menu.next && (!result || (result && result.menu && result.menu.name === current_menu.name))){
@@ -241,7 +241,7 @@ function inner_processor(bot, request){
                 if(bot.debug){
                     console.log("Invoking interceptor for :", current_menu.next);
                 }
-                result = interceptor(request, session.tags, context);
+                result = await interceptor(request, session.tags, context);
 
                 if(result && result.request && !result.menu){
                     if(bot.debug){
@@ -259,7 +259,7 @@ function inner_processor(bot, request){
                     if(bot.debug){
                         console.log("Invoking processor for :", current_menu.next);
                     }
-                    result = processor(request, session.tags, context);
+                    result = await processor(request, session.tags, context);
                 }
             }
         }
@@ -301,11 +301,11 @@ function inner_processor(bot, request){
  * @param {*} request - the request to process
  * @returns {*}
  */
-function process(bot, request){
+async function process(bot, request){
     if(bot.debug){
         console.log("Processing request: ", request, "with bot:", bot.name);
     }
-    var result = inner_processor(bot, request);
+    var result = await inner_processor(bot, request);
 
     if(!result || !result.menu){
         return;

@@ -3,8 +3,8 @@ const assert = require('assert');
 var {Bot} = require('../index');
 
 
-describe('Inline bots', function() {
-    it('inline bot must return the correct menu', function(){
+describe('Inline bots', async function() {
+    it('inline bot must return the correct menu', async function(){
         var bot = new Bot({
             name: "adder_bot", 
             entrypoint: 'adder', 
@@ -13,7 +13,7 @@ describe('Inline bots', function() {
             description: 'Display random adder'
         });
 
-        bot.at('adder', function(req){
+        bot.at('adder', async function(req){
             const reqs = req.prompt.trim().split(" ");
 
             const a = reqs[1];
@@ -26,7 +26,7 @@ describe('Inline bots', function() {
             }
         });
 
-        const result = bot.process({msisdn: '123', prompt:"@adder 10 20"});
+        const result = await bot.process({msisdn: '123', prompt:"@adder 10 20"});
         assert.equal(result.message, "10 + 20 = 30");
     });
 });

@@ -4,7 +4,7 @@
  * @param {Map<string, string} request- the request object
  * @returns {Map<string, object} - the menu object
  */
-function process(bot, request) {
+async function process(bot, request) {
     if(bot.debug){
         console.log("Processing request: " + request);
     }
@@ -16,7 +16,7 @@ function process(bot, request) {
             if(bot.debug){
                 console.log("Invoking interceptor for :", bot.entrypoint);
             }
-            result = interceptor(request);
+            result = await interceptor(request);
         }
         
         if(!result || !result.menu){
@@ -27,7 +27,7 @@ function process(bot, request) {
                 if(bot.debug){
                     console.log("Invoking processor for:", bot.entrypoint);
                 }
-                result = processor(request, context);
+                result = await processor(request, context);
             }else{
                 //TODO: Indicate that bot has no entrypoint defined
             }
