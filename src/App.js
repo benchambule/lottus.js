@@ -51,7 +51,7 @@ class App {
      * @param {string} request.prompt - the prompt of the user. Which can be a help prompt, a bot keyword or another message
      * @returns {Menu}
      */
-    process(request){
+    async process(request){
         if(this.debug){
             console.log("Processing request:", request);
         }
@@ -100,7 +100,7 @@ class App {
                 if(this.debug){
                     console.log("Processing request ", request, "with bot", bot.name);
                 }
-                result = bot.process(request);  
+                result = await bot.process(request);  
             }
             
             return result;
@@ -124,7 +124,7 @@ class App {
                         if(this.debug){
                             console.log("Processing request ", request, "with bot", bot.name);
                         }
-                        result = bot.process(request);  
+                        result = await bot.process(request);  
                     }
                     
                     return result;
