@@ -196,7 +196,7 @@ class Bot {
      * }
      */
     addMenu(menu){
-        this.at(menu.name, () => {
+        this.at(menu.name, async () => {
             return {
                 menu: menu
             }

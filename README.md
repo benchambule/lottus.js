@@ -25,7 +25,7 @@ var reverse = new Bot(
     }
 );
 
-reverse.at('main', function(request, context){
+reverse.at('main', async function(request, context){
     const prompt = request.prompt.replace(context.bot.keyword, "").trim();
     const menu = {
         text: '👉 ' + prompt.split("").reverse().join(""), 
@@ -37,10 +37,10 @@ reverse.at('main', function(request, context){
     };
 });
 
-console.log(reverse.process({msisdn: 123, prompt:"@reverse giberish"}));
-console.log(reverse.process({msisdn: 123, prompt:"@reverse bonjour le monde"}));
-console.log(reverse.process({msisdn: 123, prompt:"@reverse ola mundo"}));
-console.log(reverse.process({msisdn: 123, prompt:"@reverse hello world"}));
+console.log(reverse.process({msisdn: 123, await prompt:"@reverse giberish"}));
+console.log(reverse.process({msisdn: 123, await prompt:"@reverse bonjour le monde"}));
+console.log(reverse.process({msisdn: 123, await prompt:"@reverse ola mundo"}));
+console.log(reverse.process({msisdn: 123, await prompt:"@reverse hello world"}));
 ```
 
 Let's update our previous bot to be respond accordind to the language. We will be listening to _request.lang_ to check if it's set to _'pt'_ or _'en'_. If the _request.lang_ is not set, we will default to _'en'_. If _request.lang_ is other than _'en'_ and _'pt'_ we will respond with a message informing the customer that the provided language is unknown or not implemented yet.
@@ -60,7 +60,7 @@ var reverse = new Bot(
     }
 );
 
-reverse.intercept('main', (request) => {
+reverse.intercept('main', async (request) => {
     if(!request.lang){
         request.lang = 'en';
         return {
@@ -79,7 +79,7 @@ reverse.intercept('main', (request) => {
     }
 });
 
-reverse.at('main', function(request, context){
+reverse.at('main', async function(request, context){
     const txt = request.lang == 'pt'? 'Frase invertida' : 'Reversed sentence';
     const prompt = request.prompt.replace(context.bot.keyword, "").trim();
     const menu = {
@@ -93,10 +93,10 @@ reverse.at('main', function(request, context){
     };
 });
 
-console.log(reverse.process({msisdn: 123, prompt:"@reverse giberish"}));
-console.log(reverse.process({msisdn: 123, prompt:"@reverse bonjour le monde", lang:"fr"}));
-console.log(reverse.process({msisdn: 123, prompt:"@reverse ola mundo", lang:"pt"}));
-console.log(reverse.process({msisdn: 123, prompt:"@reverse hello world", lang:"en"}));
+console.log(await reverse.process({msisdn: 123, prompt:"@reverse giberish"}));
+console.log(await reverse.process({msisdn: 123, prompt:"@reverse bonjour le monde", lang:"fr"}));
+console.log(await reverse.process({msisdn: 123, prompt:"@reverse ola mundo", lang:"pt"}));
+console.log(await reverse.process({msisdn: 123, prompt:"@reverse hello world", lang:"en"}));
 ```
 
 Let's build another bot, this time it will have 3 menus and the user can navigate back and forth between between the menus. For this bot, we will need a session manager/storage implementation that the bot will use.
@@ -149,8 +149,8 @@ var bot = new Bot(
 
 bot.addMenus(menus);
 
-console.log(bot.process({msisdn:123, prompt:"@bot"}));
-console.log(bot.process({msisdn:123, prompt:"1"}));
+console.log(await bot.process({msisdn:123, prompt:"@bot"}));
+console.log(await bot.process({msisdn:123, prompt:"1"}));
 ```
 
 Let's now ensure that only the msisdn 123 can use the above bot
@@ -203,7 +203,7 @@ var bot = new Bot(
 
 bot.addMenus(menus);
 
-bot.intercept('*', function(request){
+bot.intercept('*', async function(request){
     if(request.msisdn.toString() !== '123'){
         const menu = {
             title: "This bot is only available for the msisdn 123",
@@ -215,5 +215,5 @@ bot.intercept('*', function(request){
     }
 });
 
-console.log(bot.process({msisdn:123, prompt:"@bot"}));
+console.log(await bot.process({msisdn:123, prompt:"@bot"}));
 ```
