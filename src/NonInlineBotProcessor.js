@@ -14,6 +14,10 @@ async function process_options(request, tags, context){
     for (const [, value] of Object.entries(context.current_menu.options)) {
         if(request.prompt.toString() === value.key.toString()){
             request.selected_option = value;
+            
+            if(value.tags){
+                tags = Object.assign({}, tags, value.tags);
+            }
 
             const interceptor = context.bot.getInterceptor(value.menu);
             if(interceptor){
