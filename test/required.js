@@ -1,9 +1,9 @@
 const assert = require('assert');
 
-const {Bot, InMemorySessionManager} = require('../index');
+const {Bot} = require('../index');
 
 const createRequireBot = () => {
-    var enq = new Bot(
+    let enq = new Bot(
         {
             name: "enq-bot", 
             entrypoint: 'name', 

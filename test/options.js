@@ -3,7 +3,7 @@ const assert = require('assert');
 const {Bot} = require('../index');
 
 const createOptionsBot = () => {
-    var info = new Bot(
+    let info = new Bot(
         {
             name: "info-bot", 
             entrypoint: 'main', 

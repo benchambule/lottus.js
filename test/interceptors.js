@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-var {Bot} = require('../index');
+const {Bot} = require('../index');
 
 
 function createBot(){
@@ -34,7 +34,7 @@ function createBot(){
         }
     ]
     
-    var bot = new Bot(
+    let bot = new Bot(
         {
             name: "bot", 
             entrypoint: 'welcome', 
@@ -80,7 +80,7 @@ function createBot(){
 describe('interceptors', function() {
     describe('inline bots', function() {
         it('inline bot must return the correct menu', function(){
-            var bot = new Bot({
+            let bot = new Bot({
                 name: "divider", 
                 entrypoint: 'divider', 
                 keyword: "@divider", 
@@ -132,7 +132,7 @@ describe('interceptors', function() {
         it('non-inline bot must return the correct menu', function(){
             const bot = createBot();
 
-            var session = bot.process({msisdn:123, prompt:"@bot"});
+            let session = bot.process({msisdn:123, prompt:"@bot"});
             assert.equal(session.menu.name, "welcome-intercepted");
 
             session = bot.process({msisdn:123, prompt:"1"}, session);

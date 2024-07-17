@@ -2,11 +2,10 @@
 
 const {Bot} = require('../index');
 
-var bot = new Bot({
+let bot = new Bot({
     name: 'barber',
     entrypoint: 'main',
-    keyword: '@barber',
-    inline: false
+    keyword: '@barber'
 });
 
 bot.at('main', function(){
@@ -69,7 +68,7 @@ bot.intercept("*", function(req){
     }
 });
 
-var session = bot.process({msisdn: '123', prompt: '@barber'});
+let session = bot.process({msisdn: '123', prompt: '@barber'});
 console.log(session.menu);
 
 session = bot.process({msisdn: '123', prompt: 'hello'}, session);

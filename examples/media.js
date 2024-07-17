@@ -1,11 +1,10 @@
 const {Bot} = require('../index');
 
-var media = new Bot(
+let media = new Bot(
     {
         name: "media-bot", 
         entrypoint: 'main', 
         keyword: "@media", 
-        inline: true, 
         description: "Reverses a provided string",
     }
 );
@@ -19,6 +18,7 @@ media.at('main', () => {
         name: 'main',
         title: "Welcome to Ben's bot",
         message: "Select an option",
+        final: true,
         media: [
             {
                 url: "resources/imgs/pt/"+randomInteger(1, 9).toString()+".jpg", 
@@ -33,4 +33,4 @@ media.at('main', () => {
 });
 
 console.log("---------------------------------------------------------------");
-console.log({msisdn: "123", prompt: "@media"}, media.process({msisdn: "123", prompt: "@media"}));
+let session = media.process({msisdn: "123", prompt: "@media"});

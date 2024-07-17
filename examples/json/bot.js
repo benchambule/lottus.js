@@ -1,7 +1,15 @@
-const {createBotFromFile} = require('../../helpers.js');
-const {InMemorySessionManager} = require('../../index.js');
+const fs = require('fs');
+const {createBotFromJSON} = require('../../index');
 
-var bot = createBotFromFile("./examples/json/bot.json");
+function createBotFromFile(filename){
+    const file_contents = fs.readFileSync(filename, 'utf8');
+
+    const json = JSON.parse(file_contents);
+
+    return createBotFromJSON(json);
+}
+
+let bot = createBotFromFile("./examples/json/bot.json");
 
 bot.at('language', function(){
     return {
@@ -17,7 +25,7 @@ bot.at('language', function(){
 });
 
 console.log("---------------------------------------------------------------");
-var session = bot.process({msisdn:"1223", prompt: "@bot"});
+let session = bot.process({msisdn:"1223", prompt: "@bot"});
 console.log({msisdn:"1223", prompt: "@bot"}, session);
 
 session = bot.process({msisdn:"1223", prompt: "1"}, session);

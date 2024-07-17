@@ -1,11 +1,10 @@
 const {Bot} = require('../index');
 
-var enq = new Bot(
+let enq = new Bot(
     {
         name: "enq-bot", 
         entrypoint: 'name', 
         keyword: "@enq", 
-        inline: false, 
         description: "This is an enquiry bot",
         debug: false
     }
@@ -85,7 +84,7 @@ enq.at('show_info', () => {
 });
 
 console.log("---------------------------------------------------------------");
-var session = enq.process({'msisdn': '123', "prompt": "@enq"});
+let session = enq.process({'msisdn': '123', "prompt": "@enq"});
 console.log({'msisdn': '123', "prompt": "@enq"}, session);
 
 session = enq.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);

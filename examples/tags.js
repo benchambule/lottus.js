@@ -3,11 +3,10 @@
 const {Bot} = require('../index');
 
 function createInquiryBot() {
-    var bot = new Bot({
+    let bot = new Bot({
             name: 'enquiry-bot',
             entrypoint: 'main',
             keyword: '@enq',
-            inline: false,
             debug: true
         }
     );
@@ -63,7 +62,7 @@ function createInquiryBot() {
 const a = createInquiryBot();
 
 console.log("---------------------------------------------------------------");
-var session = a.process({'msisdn': '123', "prompt": "@enq"}, null);
+let session = a.process({'msisdn': '123', "prompt": "@enq"}, null);
 console.log({'msisdn': '123', "prompt": "@enq"}, session);
 
 session = a.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);

@@ -1,11 +1,10 @@
 const {Bot} = require('../index');
 
-var info = new Bot(
+let info = new Bot(
     {
         name: "info-bot", 
         entrypoint: 'main', 
         keyword: "@info", 
-        inline: false, 
         description: "Reverses a provided string",
     }
 );
@@ -95,7 +94,7 @@ info.intercept('*', function(request, tags, ctxt){
 });
 
 console.log("---------------------------------------------------------------");
-var session = info.process({msisdn: "123", prompt: "@info"});
+let session = info.process({msisdn: "123", prompt: "@info"});
 console.log({msisdn: "123", prompt: "@info"}, session.menu);
 
 session = info.process({msisdn: "123", prompt: "1"}, session);

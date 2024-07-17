@@ -1,6 +1,6 @@
 'use strict';
 
-const {Bot, InMemorySessionManager} = require('../../index');
+const {Bot} = require('../../index');
 
 const menus = [
     {
@@ -32,14 +32,13 @@ const menus = [
     }
 ]
 
-var bot = new Bot(
+let bot = new Bot(
     {
         name: "bot", 
         entrypoint: 'welcome', 
         keyword: "@bot", 
         inline: false, 
-        description: "This is an enquiry bot",
-        sessionManager: new InMemorySessionManager(),
+        description: "This is an enquiry bot"
     }
 );
 
@@ -73,7 +72,7 @@ bot.intercept('welcome', () => {
 });
 
 console.log("---------------------------------------------------------------");
-var session = bot.process({msisdn:123, prompt:"@bot"});
+let session = bot.process({msisdn:123, prompt:"@bot"});
 console.log({msisdn:123, prompt:"@bot"}, session);
 session = bot.process({msisdn:123, prompt:"1"}, session);
 console.log({msisdn:123, prompt:"1"}, session);

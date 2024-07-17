@@ -1,9 +1,19 @@
-const {createBotFromFile} = require('../../helpers.js');
+const {createBotFromJSON} = require('../../index.js');
+const fs = require('fs');
 
-var bot = createBotFromFile("./examples/json/enquiry.json");
+function createBotFromFile(filename){
+    const file_contents = fs.readFileSync(filename, 'utf8');
+
+    const json = JSON.parse(file_contents);
+
+    return createBotFromJSON(json);
+}
+
+let bot = createBotFromFile("./examples/json/enquiry.json");
+console.log(bot);
 
 console.log("---------------------------------------------------------------");
-var session = bot.process({msisdn: "123", prompt: "@bot"});
+let session = bot.process({msisdn: "123", prompt: "@bot"});
 console.log({msisdn: "123", prompt: "@bot"}, session);
 
 session = bot.process({msisdn: "123", prompt: "1"}, session);

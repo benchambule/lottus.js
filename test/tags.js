@@ -1,9 +1,9 @@
 const assert = require('assert');
 
-const {Bot, InMemorySessionManager} = require('../index');
+const {Bot} = require('../index');
 
 const createInquiryBot = () => {
-    var bot = new Bot({
+    let bot = new Bot({
             name: 'enquiry-bot',
             entrypoint: 'main',
             keyword: '@enq',
@@ -63,7 +63,7 @@ describe('Tags', function(){
     it('should be able to store and retrieve tags', function(){
         const bot = createInquiryBot();
 
-        var session = bot.process({'msisdn': '123', "prompt": "@enq"});
+        let session = bot.process({'msisdn': '123', "prompt": "@enq"});
         session = bot.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
         const menu = bot.process({'msisdn': '123', "prompt": "30"}, session).menu;
 

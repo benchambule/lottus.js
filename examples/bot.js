@@ -1,13 +1,11 @@
-const {Bot, InMemorySessionManager} = require('../index');
+const {Bot} = require('../index');
 
-var info = new Bot(
+let info = new Bot(
     {
         name: "info-bot", 
         entrypoint: 'main', 
         keyword: "@info", 
-        inline: false, 
-        description: "Reverses a provided string",
-        sessionManager: new InMemorySessionManager(),
+        description: "Reverses a provided string"
     }
 );
 
@@ -85,9 +83,7 @@ info.at('country', () => {
 });
 
 info.intercept('*', function(request, tags, ctxt){
-    const session = ctxt.bot.sessionManager.get(request.msisdn);
     if(request.prompt.trim() === '@exit'){
-        ctxt.bot.sessionManager.close(session);
         return {
             menu: {
                 title: "Thank you for using Ben's bot",
@@ -96,7 +92,7 @@ info.intercept('*', function(request, tags, ctxt){
     }
 });
 
-var session = info.process({msisdn: "123", prompt: "@info"});
+let session = info.process({msisdn: "123", prompt: "@info"});
 console.log(session);
 
 session = info.process({msisdn: "123", prompt: "1"}, session);
