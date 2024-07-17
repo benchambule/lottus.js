@@ -1,19 +1,17 @@
 'use strict';
 (async function () {
-    const {Bot, InMemorySessionManager} = require('../index');
-
-    var sessionManager = new InMemorySessionManager();
+    const {Bot} = require('../index');
 
     var bot = new Bot({
         name: 'barber',
         entrypoint: 'main',
         keyword: '@barber',
-        inline: false,
-        sessionManager: sessionManager
     });
 
-    bot.at('main', async function(){
-    const menu = {
+    
+
+    bot.at('main', async() => {
+        const menu = {
             name: 'main', 
             title: 'Welcome to Barbershop', 
             text: 'Select an option',
@@ -28,7 +26,7 @@
         }
     });
 
-    bot.at('info', async function(){
+    bot.at('info', async () => {
         return {
             menu: {
                 name: 'info', 
@@ -39,25 +37,28 @@
         }
     });
 
-    bot.at('location', async function(){
+    bot.at('location', async () => {
         return {
             menu: {
                 name: 'location',
                 title: 'Location',
                 text: 'Barbershop location',
                 options: [
-                    {key: '0', label: 'Back', menu: 'main'}
+                    {key: '1', label: 'Information', menu: 'info'},
+                    {key: '2', label: 'Location', menu: 'location'},
                 ]
             }
         }
     });
 
-    bot.intercept('info', async function(req){
-        if(req.prompt == 'hello'){
-            return {
-                message: 'Hi there',
+    bot.at('info', async function(){
+        return {
+            menu: {
+                name: 'info', 
+                title: 'Information', 
+                text: 'Barbershop info', 
                 final: true
-            };
+            }
         }
     });
 
@@ -72,15 +73,27 @@
         }
     });
 
-    console.log(await bot.process({msisdn: '123', prompt: '@barber'}));
-    console.log(await bot.process({msisdn: '123', prompt: 'hello'}));
+    let session = await bot.process({msisdn: '123', prompt: '@barber'});
+    console.log(session.menu);
 
-    console.log(await bot.process({msisdn: '123', prompt: '@barber'}));
-    console.log(await bot.process({msisdn: '123', prompt: '.exit'}));
+    session = await bot.process({msisdn: '123', prompt: 'hello'}, session);
+    console.log(session.menu);
 
-    console.log(await bot.process({msisdn: '123', prompt: '@barber'}));
-    console.log(await bot.process({msisdn: '123', prompt: '1'}));
+    session = await bot.process({msisdn: '123', prompt: '@barber'}, session);
+    console.log(session.menu);
 
-    console.log(await bot.process({msisdn: '123', prompt: '@barber'}));
-    console.log(await bot.process({msisdn: '123', prompt: '2'}));
+    session = await bot.process({msisdn: '123', prompt: '.exit'}, session);
+    console.log(session.menu);
+
+    session = await bot.process({msisdn: '123', prompt: '@barber'}, session);
+    console.log(session.menu);
+
+    session = await bot.process({msisdn: '123', prompt: '1'}, session);
+    console.log(session.menu);
+
+    session = await bot.process({msisdn: '123', prompt: '@barber'}, session);
+    console.log(session.menu);
+
+    session = await bot.process({msisdn: '123', prompt: '2'}, session);
+    console.log(session.menu);
 })();

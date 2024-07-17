@@ -1,8 +1,16 @@
 (async function () {
-    const {createBotFromFile} = require('../../helpers.js');
-    const {InMemorySessionManager} = require('../../index.js');
+    const fs = require('fs');
+    const {createBotFromJSON} = require('../../index');
 
-    var bot = createBotFromFile("./examples/json/bot.json", new InMemorySessionManager());
+    function createBotFromFile(filename){
+        const file_contents = fs.readFileSync(filename, 'utf8');
+
+        const json = JSON.parse(file_contents);
+
+        return createBotFromJSON(json);
+    }
+
+    const bot = createBotFromFile("./examples/json/bot.json");
 
     bot.at('language', async function(){
         return {
@@ -18,7 +26,12 @@
     });
 
     console.log("---------------------------------------------------------------");
-    console.log({msisdn:"1223", prompt: "@bot"}, await bot.process({msisdn:"1223", prompt: "@bot"}));
-    console.log({msisdn:"1223", prompt: "1"}, await bot.process({msisdn:"1223", prompt: "1"}));
-    console.log({msisdn:"1223", prompt: "4"}, await bot.process({msisdn:"1223", prompt: "4"}));
+    let session = await bot.process({msisdn:"1223", prompt: "@bot"});
+    console.log({msisdn:"1223", prompt: "@bot"}, session);
+    
+    session = await bot.process({msisdn:"1223", prompt: "1"}, session);
+    console.log({msisdn:"1223", prompt: "1"}, session);
+
+    session = await bot.process({msisdn:"1223", prompt: "4"}, session);
+    console.log({msisdn:"1223", prompt: "4"}, session);
 })();

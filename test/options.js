@@ -1,18 +1,15 @@
 const assert = require('assert');
 
-const {Bot, InMemorySessionManager} = require('../index');
-
-var sessionManager = new InMemorySessionManager();
+const {Bot} = require('../index');
 
 const createOptionsBot = () => {
-    var info = new Bot(
+    let info = new Bot(
         {
             name: "info-bot", 
             entrypoint: 'main', 
             keyword: "@info", 
             inline: false, 
             description: "Reverses a provided string",
-            sessionManager: sessionManager,
         }
     );
     
@@ -90,15 +87,12 @@ const createOptionsBot = () => {
     });
     
     info.intercept('*', function(request, tags, ctxt){
-        const session = ctxt.bot.sessionManager.get(request.msisdn);
         if(request.prompt.trim() === '@exit'){
-            console.log(ctxt.bot.sessionManager.get(session), 'closing!');
-            ctxt.bot.sessionManager.close(session);
-            console.log(ctxt.bot.sessionManager.get(session), 'closed!');
             return {
                 menu: {
                     name: "@exit",
                     title: "Thank you for using Ben's bot",
+                    final: true
                 }
             }
         }
@@ -110,14 +104,28 @@ const createOptionsBot = () => {
 describe('options', function() {
     it('bot must return the correct selected menu', function() {
         const bot = createOptionsBot();
-        assert.equal(bot.process({msisdn: "1234", prompt: '@info'}).name, 'main');
-        assert.equal(bot.process({msisdn: "1234", prompt: '1'}).name, 'name');
+        let session = bot.process({msisdn: "1234", prompt: '@info'});
+        assert.equal(session.menu.name, 'main');
 
-        assert.equal(bot.process({msisdn: "1234", prompt: '@info'}).name, 'main');
-        assert.equal(bot.process({msisdn: "1234", prompt: '2'}).name, 'profession');
-        assert.equal(bot.process({msisdn: "1234", prompt: '0'}).name, 'main');
-        assert.equal(bot.process({msisdn: "1234", prompt: '3'}).name, 'age');
-        assert.equal(bot.process({msisdn: "1234", prompt: '0'}).name, 'main');
-        assert.equal(bot.process({msisdn: "1234", prompt: '4'}).name, 'country');
+        session = bot.process({msisdn: "1234", prompt: '1'}, session);
+        assert.equal(session.menu.name, 'name');
+
+        session = bot.process({msisdn: "1234", prompt: '@info'}, session);
+        assert.equal(session.menu.name, 'main');
+
+        session = bot.process({msisdn: "1234", prompt: '2'}, session);
+        assert.equal(session.menu.name, 'profession');
+
+        session = bot.process({msisdn: "1234", prompt: '0'}, session);
+        assert.equal(session.menu.name, 'main');
+
+        session = bot.process({msisdn: "1234", prompt: '3'}, session);
+        assert.equal(session.menu.name, 'age');
+
+        session = bot.process({msisdn: "1234", prompt: '0'}, session);
+        assert.equal(session.menu.name, 'main');
+
+        session = bot.process({msisdn: "1234", prompt: '4'}, session);
+        assert.equal(session.menu.name, 'country');
     });
 });

@@ -1,16 +1,13 @@
 const assert = require('assert');
 
-const {Bot, InMemorySessionManager} = require('../index');
-
-const sessionManager = new InMemorySessionManager();
+const {Bot} = require('../index');
 
 const createInquiryBot = () => {
-    var bot = new Bot({
+    let bot = new Bot({
             name: 'enquiry-bot',
             entrypoint: 'main',
             keyword: '@enq',
-            inline: false,
-            sessionManager : sessionManager
+            inline: false
         }
     );
 
@@ -66,9 +63,9 @@ describe('Tags', function(){
     it('should be able to store and retrieve tags', function(){
         const bot = createInquiryBot();
 
-        bot.process({'msisdn': '123', "prompt": "@enq"});
-        bot.process({'msisdn': '123', "prompt": "Ben Chambule"});
-        const menu = bot.process({'msisdn': '123', "prompt": "30"});
+        let session = bot.process({'msisdn': '123', "prompt": "@enq"});
+        session = bot.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+        const menu = bot.process({'msisdn': '123', "prompt": "30"}, session).menu;
 
         assert.equal(menu.message, "Provided information\nName: Ben Chambule\nAge: 30");
     });

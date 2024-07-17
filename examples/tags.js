@@ -1,8 +1,6 @@
 'use strict';
 (async function () {
-    const {Bot, InMemorySessionManager} = require('../index');
-
-    var sessionManager = new InMemorySessionManager();
+    const {Bot, } = require('../index');
 
     function createInquiryBot() {
         var bot = new Bot({
@@ -10,12 +8,11 @@
                 entrypoint: 'main',
                 keyword: '@enq',
                 inline: false,
-                debug: true,
-                sessionManager : sessionManager
+                debug: true
             }
         );
 
-        bot.at('main', function(req, tags){
+        bot.at('main', async function(req, tags){
             const menu = {
                 name: 'main',
                 title: "Welcome to Ben's bot",
@@ -29,7 +26,7 @@
             }
         });
 
-        bot.at('age', function(req, tags){
+        bot.at('age', async function(req, tags){
             const menu = {
                 name: 'age',
                 title: "Welcome to Ben's bot",
@@ -45,7 +42,7 @@
             }
         });
 
-        bot.at('show_info', function(req, tags){
+        bot.at('show_info', async function(req, tags){
             tags['age'] = req.prompt;
             const menu = {
                 name: 'show_info',
@@ -63,10 +60,16 @@
         return bot;
     }
 
+
     const a = createInquiryBot();
 
     console.log("---------------------------------------------------------------");
-    console.log({'msisdn': '123', "prompt": "@enq"}, await a.process({'msisdn': '123', "prompt": "@enq"}));
-    console.log({'msisdn': '123', "prompt": "Ben Chambule"}, await a.process({'msisdn': '123', "prompt": "Ben Chambule"}));
-    console.log({'msisdn': '123', "prompt": "30"}, await a.process({'msisdn': '123', "prompt": "30"}));
+    let session = await a.process({'msisdn': '123', "prompt": "@enq"}, null);
+    console.log({'msisdn': '123', "prompt": "@enq"}, session);
+
+    session = await a.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+    console.log({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+
+    session = await a.process({'msisdn': '123', "prompt": "30"}, session);
+    console.log({'msisdn': '123', "prompt": "30"}, session);
 })();

@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-var {Bot, InMemorySessionManager} = require('../index');
+const {Bot} = require('../index');
 
 
 function createBot(){
@@ -34,14 +34,13 @@ function createBot(){
         }
     ]
     
-    var bot = new Bot(
+    let bot = new Bot(
         {
             name: "bot", 
             entrypoint: 'welcome', 
             keyword: "@bot", 
             inline: false, 
             description: "This is an enquiry bot",
-            sessionManager: new InMemorySessionManager(),
         }
     );
     
@@ -81,7 +80,7 @@ function createBot(){
 describe('interceptors', function() {
     describe('inline bots', function() {
         it('inline bot must return the correct menu', function(){
-            var bot = new Bot({
+            let bot = new Bot({
                 name: "divider", 
                 entrypoint: 'divider', 
                 keyword: "@divider", 
@@ -122,10 +121,10 @@ describe('interceptors', function() {
             });
 
             const result = bot.process({msisdn: '123', prompt:"@divider 10 5"});
-            assert.equal(result.message, "10 / 5 = 2");
+            assert.equal(result.menu.message, "10 / 5 = 2");
 
-            assert.equal(bot.process({msisdn: '123', prompt:"@divider 10 0"}).message, "Division by zero is not allowed");
-            assert.equal(bot.process({msisdn: '123', prompt:"@divider 10"}).message, "Please provide the dividend and the divisor");
+            assert.equal(bot.process({msisdn: '123', prompt:"@divider 10 0"}).menu.message, "Division by zero is not allowed");
+            assert.equal(bot.process({msisdn: '123', prompt:"@divider 10"}).menu.message, "Please provide the dividend and the divisor");
         });
     });
 
@@ -133,8 +132,11 @@ describe('interceptors', function() {
         it('non-inline bot must return the correct menu', function(){
             const bot = createBot();
 
-            assert.equal(bot.process({msisdn:123, prompt:"@bot"}).name, "welcome-intercepted");
-            assert.equal(bot.process({msisdn:123, prompt:"1"}).name, "*-intercepted");
+            let session = bot.process({msisdn:123, prompt:"@bot"});
+            assert.equal(session.menu.name, "welcome-intercepted");
+
+            session = bot.process({msisdn:123, prompt:"1"}, session);
+            assert.equal(session.menu.name, "*-intercepted");
         });
     });
 });

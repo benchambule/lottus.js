@@ -1,4 +1,3 @@
-
 const {Bot} = require('../index');
 
 let info = new Bot(
@@ -6,11 +5,11 @@ let info = new Bot(
         name: "info-bot", 
         entrypoint: 'main', 
         keyword: "@info", 
-        description: "Reverses a provided string",
+        description: "Reverses a provided string"
     }
 );
 
-info.at('main', () => {
+info.at('main', async () => {
     const menu = {
         name: 'main',
         title: "Welcome to Ben's bot",
@@ -27,7 +26,7 @@ info.at('main', () => {
     };
 });
 
-info.at('profession', () => {
+info.at('profession', async () => {
     const menu = {
         name: 'profession',
         title: "Ben's profession",
@@ -41,7 +40,7 @@ info.at('profession', () => {
     };
 });
 
-info.at('name', () => {
+info.at('name', async () => {
     const menu = {
         name: "name",
         title: "Ben's full name",
@@ -55,7 +54,7 @@ info.at('name', () => {
     };
 });
 
-info.at('age', () => {
+info.at('age', async () => {
     const menu = {
         name: "age",
         title: "Ben's age",
@@ -69,7 +68,7 @@ info.at('age', () => {
     };
 });
 
-info.at('country', () => {
+info.at('country', async () => {
     const menu = {
         name: "country",
         title: "Ben's country",
@@ -83,31 +82,28 @@ info.at('country', () => {
     };
 });
 
-info.intercept('*', function(request, tags, ctxt){
+info.intercept('*', async (request) => {
     if(request.prompt.trim() === '@exit'){
         return {
             menu: {
                 title: "Thank you for using Ben's bot",
-                final: true
             }
         }
     }
 });
-
 (async () => {
-    console.log("---------------------------------------------------------------");
     let session = await info.process({msisdn: "123", prompt: "@info"});
-    console.log({msisdn: "123", prompt: "@info"}, session.menu);
+    console.log(session);
 
     session = await info.process({msisdn: "123", prompt: "1"}, session);
-    console.log({msisdn: "123", prompt: "1"}, session.menu);
+    console.log(session);
 
     session = await info.process({msisdn: "123", prompt: "0"}, session);
-    console.log({msisdn: "123", prompt: "0"}, session.menu);
+    console.log(session);
 
     session = await info.process({msisdn: "123", prompt: "2"}, session);
-    console.log({msisdn: "123", prompt: "2"}, session.menu);
+    console.log(session);
 
     session = await info.process({msisdn: "123", prompt: "@exit"}, session);
-    console.log({msisdn: "123", prompt: "@exit"}, session);
+    console.log(session);
 })();
