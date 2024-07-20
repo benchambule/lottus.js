@@ -1,4 +1,5 @@
 'use strict';
+//TODO: Update documentation
 
 /***
  * Processes a menu with options
@@ -152,11 +153,16 @@ async function inner_processor(bot, request, session){
         const interceptor = bot.getInterceptor(bot.entrypoint);
         const context = {bot: bot};
 
+        let tags = null;
+        if(session && session.tags){
+            tags = session.tags;
+        }
+
         if(interceptor){
             if(bot.debug){
                 console.log("Invoking interceptor for :", bot.entrypoint);
             }
-            result = await interceptor(request, null, context);
+            result = await interceptor(request, tags, context);
 
             if(result && result.request && !result.menu){
                 if(bot.debug){
@@ -173,7 +179,7 @@ async function inner_processor(bot, request, session){
                 if(bot.debug){
                     console.log("Invoking processor for :", bot.entrypoint);
                 }
-                result = await processor(request, null, context);
+                result = await processor(request, tags, context);
                 if(bot.debug){
                     console.log("Result :", result);
                 }
@@ -184,6 +190,7 @@ async function inner_processor(bot, request, session){
             if(bot.debug){
                 console.log("Initializing session");
             }
+            
             session = {
                 bot: bot.name,
                 msisdn: request.msisdn,
