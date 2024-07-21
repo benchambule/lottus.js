@@ -190,7 +190,7 @@ async function inner_processor(bot, request, session){
             if(bot.debug){
                 console.log("Initializing session");
             }
-            
+
             session = {
                 bot: bot.name,
                 msisdn: request.msisdn,
@@ -533,7 +533,7 @@ class Bot {
      * }
      */
     addMenu(menu){
-        this.at(menu.name, () => {
+        this.at(menu.name, async () => {
             return {
                 menu: menu
             }
