@@ -38,16 +38,16 @@ reverse.at('main', async function(request){
 
 (async () => {
     let result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "giberish"}, null);
-    console.log(result.menu);
+    console.log(result.menu.text);
 
     result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "bonjour le monde"});
-    console.log(result.menu);
+    console.log(result.menu.text);
 
     result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "ola mundo"});
-    console.log(result.menu);
+    console.log(result.menu.text);
 
     result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "hello world"});
-    console.log(result.menu);
+    console.log(result.menu.text);
 })();
 ```
 
@@ -77,7 +77,7 @@ reverse.intercept('main', async (request) => {
 
     if(request.lang != 'pt'  && request.lang != 'en'){
         const menu = {
-            title: 'lang cannot be ' +  "'" + request.lang+ "'" + ". lang should be 'en' or 'pt'",
+            text: 'lang cannot be ' +  "'" + request.lang+ "'" + ". lang should be 'en' or 'pt'",
             final: true
         }
         return {
@@ -100,10 +100,12 @@ reverse.at('main', async function(request){
     };
 });
 
-console.log(await reverse.process({msisdn: 123, prompt:"@reverse giberish"}));
-console.log(await reverse.process({msisdn: 123, prompt:"@reverse bonjour le monde", lang:"fr"}));
-console.log(await reverse.process({msisdn: 123, prompt:"@reverse ola mundo", lang:"pt"}));
-console.log(await reverse.process({msisdn: 123, prompt:"@reverse hello world", lang:"en"}));
+(async () => {
+    console.log((await reverse.process({msisdn: 123, prompt: "@reverse", sentence: "giberish"})).menu.text);
+    console.log((await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "bonjour le monde", lang:"fr"})).menu.text);
+    console.log((await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "ola mundo", lang:"pt"})).menu.text);
+    console.log((await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "hello world", lang:"en"})).menu.text);
+})();
 ```
 
 Let's build another bot, this time it will have 3 menus and the user can navigate back and forth between between the menus. For this bot, we will need a session manager/storage implementation that the bot will use.
