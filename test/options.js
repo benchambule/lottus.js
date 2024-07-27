@@ -13,7 +13,7 @@ const createOptionsBot = () => {
         }
     );
     
-    info.at('main', () => {
+    info.at('main', async () => {
         const menu = {
             name: 'main',
             title: "Welcome to Ben's bot",
@@ -30,7 +30,7 @@ const createOptionsBot = () => {
         };
     });
     
-    info.at('profession', () => {
+    info.at('profession', async () => {
         const menu = {
             name: 'profession',
             title: "Ben's profession",
@@ -44,7 +44,7 @@ const createOptionsBot = () => {
         };
     });
     
-    info.at('name', () => {
+    info.at('name', async () => {
         const menu = {
             name: "name",
             title: "Ben's full name",
@@ -58,7 +58,7 @@ const createOptionsBot = () => {
         };
     });
     
-    info.at('age', () => {
+    info.at('age', async () => {
         const menu = {
             name: "age",
             title: "Ben's age",
@@ -72,7 +72,7 @@ const createOptionsBot = () => {
         };
     });
     
-    info.at('country', () => {
+    info.at('country', async () => {
         const menu = {
             name: "country",
             title: "Ben's country",
@@ -86,7 +86,7 @@ const createOptionsBot = () => {
         };
     });
     
-    info.intercept('*', function(request, tags, ctxt){
+    info.intercept('*', async function(request, tags, ctxt){
         if(request.prompt.trim() === '@exit'){
             return {
                 menu: {
@@ -103,29 +103,32 @@ const createOptionsBot = () => {
 
 describe('options', function() {
     it('bot must return the correct selected menu', function() {
-        const bot = createOptionsBot();
-        let session = bot.process({msisdn: "1234", prompt: '@info'});
-        assert.equal(session.menu.name, 'main');
+        (async () => {
+            const bot = createOptionsBot();
+            
+            let session = await bot.process({msisdn: "1234", prompt: '@info'});
+            assert.equal(session.menu.name, 'main');
 
-        session = bot.process({msisdn: "1234", prompt: '1'}, session);
-        assert.equal(session.menu.name, 'name');
+            session = await bot.process({msisdn: "1234", prompt: '1'}, session);
+            assert.equal(session.menu.name, 'name');
 
-        session = bot.process({msisdn: "1234", prompt: '@info'}, session);
-        assert.equal(session.menu.name, 'main');
+            session = await bot.process({msisdn: "1234", prompt: '@info'}, session);
+            assert.equal(session.menu.name, 'main');
 
-        session = bot.process({msisdn: "1234", prompt: '2'}, session);
-        assert.equal(session.menu.name, 'profession');
+            session = await bot.process({msisdn: "1234", prompt: '2'}, session);
+            assert.equal(session.menu.name, 'profession');
 
-        session = bot.process({msisdn: "1234", prompt: '0'}, session);
-        assert.equal(session.menu.name, 'main');
+            session = await bot.process({msisdn: "1234", prompt: '0'}, session);
+            assert.equal(session.menu.name, 'main');
 
-        session = bot.process({msisdn: "1234", prompt: '3'}, session);
-        assert.equal(session.menu.name, 'age');
+            session = await bot.process({msisdn: "1234", prompt: '3'}, session);
+            assert.equal(session.menu.name, 'age');
 
-        session = bot.process({msisdn: "1234", prompt: '0'}, session);
-        assert.equal(session.menu.name, 'main');
+            session = await bot.process({msisdn: "1234", prompt: '0'}, session);
+            assert.equal(session.menu.name, 'main');
 
-        session = bot.process({msisdn: "1234", prompt: '4'}, session);
-        assert.equal(session.menu.name, 'country');
+            session = await bot.process({msisdn: "1234", prompt: '4'}, session);
+            assert.equal(session.menu.name, 'country');
+        })();
     });
 });

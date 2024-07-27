@@ -11,7 +11,7 @@ const createInquiryBot = () => {
         }
     );
 
-    bot.at('main', function(req, tags){
+    bot.at('main', async function(req, tags){
         const menu = {
             name: 'main',
             title: "Welcome to Ben's bot",
@@ -25,7 +25,7 @@ const createInquiryBot = () => {
         }
     });
 
-    bot.at('age', function(req, tags){
+    bot.at('age', async function(req, tags){
         const menu = {
             name: 'age',
             title: "Welcome to Ben's bot",
@@ -41,7 +41,7 @@ const createInquiryBot = () => {
         }
     });
 
-    bot.at('show_info', function(req, tags){
+    bot.at('show_info', async function(req, tags){
         tags['age'] = req.prompt;
         const menu = {
             name: 'show_info',
@@ -61,12 +61,14 @@ const createInquiryBot = () => {
 
 describe('Tags', function(){
     it('should be able to store and retrieve tags', function(){
-        const bot = createInquiryBot();
+        (async () => {
+            const bot = createInquiryBot();
+            
+            let session = await bot.process({'msisdn': '123', "prompt": "@enq"});
+            session = await bot.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+            const menu = await bot.process({'msisdn': '123', "prompt": "30"}, session).menu;
 
-        let session = bot.process({'msisdn': '123', "prompt": "@enq"});
-        session = bot.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
-        const menu = bot.process({'msisdn': '123', "prompt": "30"}, session).menu;
-
-        assert.equal(menu.message, "Provided information\nName: Ben Chambule\nAge: 30");
+            assert.equal(menu.message, "Provided information\nName: Ben Chambule\nAge: 30");
+        })();
     });
 });

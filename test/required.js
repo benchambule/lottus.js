@@ -13,7 +13,7 @@ const createRequireBot = () => {
         }
     );
     
-    enq.at('name', () => {
+    enq.at('name', async () => {
         const menu = {
             name: 'name',
             title: "Welcome to the enquiry bot",
@@ -31,7 +31,7 @@ const createRequireBot = () => {
         };
     });
     
-    enq.at('birthday', () => {
+    enq.at('birthday', async () => {
         const menu = {
             name: 'birthday',
             title: "Welcome to the enquiry bot",
@@ -49,7 +49,7 @@ const createRequireBot = () => {
         };
     });
     
-    enq.at('sport', (request, tags) => {
+    enq.at('sport', async (request, tags) => {
         tags['birthday'] = tags['birthday'].replace(/\//g, '-');
     
         const menu = {
@@ -69,7 +69,7 @@ const createRequireBot = () => {
         };
     });
     
-    enq.at('show_info', () => {
+    enq.at('show_info', async () => {
         const txt = "Name: {{name}}\nBirthday: {{birthday}}\nFavourite sport: {{sport}}";
         const menu = {
             name: 'show_info',
@@ -86,15 +86,17 @@ const createRequireBot = () => {
 }
 
 describe('Required', () => {
-    it('It should store and retrieve required info as tags', async () => {
-        const enq = createRequireBot();
+    it('It should store and retrieve required info as tags', () => {
+        (async () => {
+            const enq = createRequireBot();
         
-        let session = enq.process({'msisdn': '123', "prompt": "@enq"});
-        session = enq.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
-        session = enq.process({'msisdn': '123', "prompt": "23/04/1994"}, session);
-        session = enq.process({'msisdn': '123', "prompt": "no-sport"}, session);
-        const menu = enq.process({'msisdn': '123', "prompt": "Football"}, session).menu;
+            let session = await enq.process({'msisdn': '123', "prompt": "@enq"});
+            session = await enq.process({'msisdn': '123', "prompt": "Ben Chambule"}, session);
+            session = await enq.process({'msisdn': '123', "prompt": "23/04/1994"}, session);
+            session = await enq.process({'msisdn': '123', "prompt": "no-sport"}, session);
+            const menu = await enq.process({'msisdn': '123', "prompt": "Football"}, session).menu;
 
-        assert.equal(menu.message, "Name: Ben Chambule\nBirthday: 23-04-1994\nFavourite sport: Football");
+            assert.equal(menu.message, "Name: Ben Chambule\nBirthday: 23-04-1994\nFavourite sport: Football");
+        })();
     });
 })

@@ -46,7 +46,7 @@ function createBot(){
     
     bot.addMenus(menus);
     
-    bot.intercept('*', () => {
+    bot.intercept('*', async () => {
         return {
             menu: {
                 name: "*-intercepted",
@@ -59,7 +59,7 @@ function createBot(){
         }
     });
     
-    bot.intercept('welcome', () => {
+    bot.intercept('welcome', async () => {
         return {
             menu: {
                 name: "welcome-intercepted",
@@ -84,11 +84,10 @@ describe('interceptors', function() {
                 name: "divider", 
                 entrypoint: 'divider', 
                 keyword: "@divider", 
-                inline: true,
                 description: 'Display random divider'
             });
 
-            bot.intercept('divider', function(req){
+            bot.intercept('divider', async function(req){
                 const reqs = req.prompt.trim().split(" ");
                 if(reqs.length < 3){
                     return {
@@ -107,7 +106,7 @@ describe('interceptors', function() {
                 }
             });
 
-            bot.at('divider', function(req){
+            bot.at('divider', async function(req){
                 const reqs = req.prompt.trim().split(" ");
 
                 const a = reqs[1];
@@ -120,11 +119,13 @@ describe('interceptors', function() {
                 }
             });
 
-            const result = bot.process({msisdn: '123', prompt:"@divider 10 5"});
-            assert.equal(result.menu.message, "10 / 5 = 2");
+            (async () => {
+                const result = await bot.process({msisdn: '123', prompt:"@divider 10 5"});
+                assert.equal(result.menu.message, "10 / 5 = 2");
 
-            assert.equal(bot.process({msisdn: '123', prompt:"@divider 10 0"}).menu.message, "Division by zero is not allowed");
-            assert.equal(bot.process({msisdn: '123', prompt:"@divider 10"}).menu.message, "Please provide the dividend and the divisor");
+                assert.equal(await (bot.process({msisdn: '123', prompt:"@divider 10 0"})).menu.message, "Division by zero is not allowed");
+                assert.equal(await (bot.process({msisdn: '123', prompt:"@divider 10"})).menu.message, "Please provide the dividend and the divisor");
+            })();
         });
     });
 
@@ -132,11 +133,13 @@ describe('interceptors', function() {
         it('non-inline bot must return the correct menu', function(){
             const bot = createBot();
 
-            let session = bot.process({msisdn:123, prompt:"@bot"});
-            assert.equal(session.menu.name, "welcome-intercepted");
+            (async () => {
+                let session = await bot.process({msisdn:123, prompt:"@bot"});
+                assert.equal(session.menu.name, "welcome-intercepted");
 
-            session = bot.process({msisdn:123, prompt:"1"}, session);
-            assert.equal(session.menu.name, "*-intercepted");
+                session = await bot.process({msisdn:123, prompt:"1"}, session);
+                assert.equal(session.menu.name, "*-intercepted");
+            })();
         });
     });
 });
