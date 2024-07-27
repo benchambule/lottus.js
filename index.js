@@ -533,9 +533,14 @@ class Bot {
      * }
      */
     addMenu(menu){
-        this.at(menu.name, async () => {
+        this.at(menu.name, async function(req, tags){
+            if(menu.required && menu.required.regex){
+                menu.required.regex = new RegExp(menu.required.regex);
+            }
+            
             return {
-                menu: menu
+                menu: menu,
+                tags: tags,
             }
         });
     }
@@ -597,18 +602,7 @@ function createBotFromJSON(json){
         }
     );
 
-    menus.forEach(menu => {
-        bot.at(menu.name, async function(req, tags){
-            if(menu.required && menu.required.regex){
-                menu.required.regex = new RegExp(menu.required.regex);
-            }
-            
-            return {
-                menu: menu,
-                tags: tags,
-            }
-        });
-    });
+    bot.addMenus(menus);
 
     return bot;
 }
