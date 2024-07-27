@@ -18,6 +18,10 @@ async function process_options(request, tags, context){
         if(request.prompt.toString() === value.key.toString()){
             request.selected_option = value;
 
+            if(request.selected_option.tags){
+                tags = {...tags, ...request.selected_option.tags};
+            }
+
             const interceptor = context.bot.getInterceptor(value.menu);
             if(interceptor){
                 if(context.bot.debug){
