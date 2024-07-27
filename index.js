@@ -190,7 +190,7 @@ async function inner_processor(bot, request, session){
             }
         }
 
-        if(result && result.menu && !result.menu.final){
+        if(result && result.menu){
             if(bot.debug){
                 console.log("Initializing session");
             }
@@ -371,7 +371,7 @@ async function defaultProcessor(bot, request, session){
     }
 
     if(bot.debug){
-        console.log("Result from processing request:", request, 'is menu:', result.menu.name);
+        console.log("Result from processing request:", request, 'is menu:', result);
     }
 
     return result.session;

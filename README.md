@@ -20,15 +20,14 @@ var reverse = new Bot(
         name: "reverse", 
         entrypoint: 'main', 
         keyword: "@reverse", 
-        inline: true, // This bot is inline, so it won't create a session
-        description: "Reverses a provided string" 
+        description: "Reverses a provided string",
     }
 );
 
-reverse.at('main', async function(request, context){
-    const prompt = request.prompt.replace(context.bot.keyword, "").trim();
+reverse.at('main', async function(request){
+    const sentence = request.sentence;
     const menu = {
-        text: '👉 ' + prompt.split("").reverse().join(""), 
+        text: '👉 ' + sentence.split("").reverse().join(""), 
         final: true
     }
 
@@ -37,10 +36,19 @@ reverse.at('main', async function(request, context){
     };
 });
 
-console.log(reverse.process({msisdn: 123, await prompt:"@reverse giberish"}));
-console.log(reverse.process({msisdn: 123, await prompt:"@reverse bonjour le monde"}));
-console.log(reverse.process({msisdn: 123, await prompt:"@reverse ola mundo"}));
-console.log(reverse.process({msisdn: 123, await prompt:"@reverse hello world"}));
+(async () => {
+    let result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "giberish"}, null);
+    console.log(result.menu);
+
+    result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "bonjour le monde"});
+    console.log(result.menu);
+
+    result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "ola mundo"});
+    console.log(result.menu);
+
+    result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "hello world"});
+    console.log(result.menu);
+})();
 ```
 
 Let's update our previous bot to be respond accordind to the language. We will be listening to _request.lang_ to check if it's set to _'pt'_ or _'en'_. If the _request.lang_ is not set, we will default to _'en'_. If _request.lang_ is other than _'en'_ and _'pt'_ we will respond with a message informing the customer that the provided language is unknown or not implemented yet.
@@ -55,7 +63,6 @@ var reverse = new Bot(
         name: "reverse", 
         entrypoint: 'main', 
         keyword: "@reverse", 
-        inline: true, // This bot is inline, so it won't create a session
         description: "Reverses a provided string" 
     }
 );
@@ -79,9 +86,9 @@ reverse.intercept('main', async (request) => {
     }
 });
 
-reverse.at('main', async function(request, context){
+reverse.at('main', async function(request){
     const txt = request.lang == 'pt'? 'Frase invertida' : 'Reversed sentence';
-    const prompt = request.prompt.replace(context.bot.keyword, "").trim();
+    const prompt = request.sentence;
     const menu = {
         title: txt,
         text: prompt.split("").reverse().join(""), 
@@ -104,7 +111,7 @@ Let's build another bot, this time it will have 3 menus and the user can navigat
 ```javascript
 'use strict';
 
-const {Bot, InMemorySessionManager} = require('lottus.js');
+const {Bot} = require('lottus.js');
 
 const menus = [
     {
@@ -141,16 +148,25 @@ var bot = new Bot(
         name: "bot", 
         entrypoint: 'welcome', 
         keyword: "@bot", 
-        inline: false, 
         description: "This is an enquiry bot",
-        sessionManager: new InMemorySessionManager(), // This is where the session will be stored, an alternative implementation can be provided, i.e., file based or database based, or something else.
     }
 );
 
 bot.addMenus(menus);
 
-console.log(await bot.process({msisdn:123, prompt:"@bot"}));
-console.log(await bot.process({msisdn:123, prompt:"1"}));
+(async () => {
+    let session = await bot.process({msisdn:123, prompt:"@bot"});
+    console.log(session.menu);
+
+    session = await bot.process({msisdn:123, prompt:"1"}, session);
+    console.log(session.menu);
+
+    session = await bot.process({msisdn:123, prompt:"0"}, session);
+    console.log(session.menu);
+
+    session = await bot.process({msisdn:123, prompt:"2"}, session);
+    console.log(session.menu);
+})();
 ```
 
 Let's now ensure that only the msisdn 123 can use the above bot
@@ -158,7 +174,7 @@ Let's now ensure that only the msisdn 123 can use the above bot
 ```javascript
 'use strict';
 
-const {Bot, InMemorySessionManager} = require('lottus.js');
+const {Bot} = require('lottus.js');
 
 const menus = [
     {
@@ -195,9 +211,7 @@ var bot = new Bot(
         name: "bot", 
         entrypoint: 'welcome', 
         keyword: "@bot", 
-        inline: false, 
         description: "This is an enquiry bot",
-        sessionManager: new InMemorySessionManager(), // This is where the session will be stored, an alternative implementation can be provided, i.e., file based or database based, or something else.
     }
 );
 
@@ -215,5 +229,20 @@ bot.intercept('*', async function(request){
     }
 });
 
-console.log(await bot.process({msisdn:123, prompt:"@bot"}));
+(async () => {
+    let session = await bot.process({msisdn:1234, prompt:"@bot"});
+    console.log(session.menu);
+
+    session = await bot.process({msisdn:123, prompt:"@bot"});
+    console.log(session.menu);
+
+    session = await bot.process({msisdn:123, prompt:"1"}, session);
+    console.log(session.menu);
+
+    session = await bot.process({msisdn:123, prompt:"0"}, session);
+    console.log(session.menu);
+
+    session = await bot.process({msisdn:123, prompt:"2"}, session);
+    console.log(session.menu);
+})();
 ```
