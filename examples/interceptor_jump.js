@@ -6,7 +6,7 @@ let enq = new Bot(
         entrypoint: 'name', 
         keyword: "@enq", 
         description: "This is an enquiry bot",
-        debug: true
+        debug: false
     }
 );
 
