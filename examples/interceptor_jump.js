@@ -72,7 +72,6 @@ enq.at('sport', async (request, tags) => {
 
 enq.intercept('birthday', async (req, tags) => {
     const parts = req.prompt.split(" ");
-    console.log(parts, tags);
     let menu = null;
 
     if(parts.length == 4){
