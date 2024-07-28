@@ -281,6 +281,9 @@ async function inner_processor(bot, request, session){
         }
 
         if(result){
+            if(bot.debug){
+                console.log("Result of the processing is: ", result);
+            }
             if(result.menu){
                 menu = result.menu;
                 session.location = result.menu.name;

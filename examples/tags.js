@@ -7,7 +7,6 @@
                 name: 'enquiry-bot',
                 entrypoint: 'main',
                 keyword: '@enq',
-                inline: false,
                 debug: true
             }
         );
