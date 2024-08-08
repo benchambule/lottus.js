@@ -46,27 +46,23 @@ enq.at('birthday', async () => {
     };
 });
 
-const sport_menu = {
-    name: 'sport',
-    title: "Welcome to the enquiry bot",
-    message: "Please provide your favourite sport",
-    required: {
-        name: "sport",
-        error_message: "Invalid sport",
-        regex: /^[a-zA-Z]+$/,
-        in: {
-            options: ["Football", "Basketball", "Racing"],
-            ignore_case: false,
-        }
-    },
-    next: "show_info",
-};
-
 enq.at('sport', async (request, tags) => {
-    tags['birthday'] = tags['birthday'].replace(/\//g, '-');
-
     return {
-        menu: sport_menu
+        menu: {
+            name: 'sport',
+            title: "Welcome to the enquiry bot",
+            message: "Please provide your favourite sport",
+            required: {
+                name: "sport",
+                error_message: "Invalid sport",
+                regex: /^[a-zA-Z]+$/,
+                in: {
+                    options: ["Football", "Basketball", "Racing"],
+                    ignore_case: false,
+                }
+            },
+            next: "show_info",
+        }
     };
 });
 
@@ -75,41 +71,35 @@ enq.intercept('birthday', async (req, tags) => {
     let menu = null;
 
     if(parts.length == 4){
-        tags['name'] = parts[0] + parts[1];
+        tags['name'] = parts[0] + " " + parts[1];
         tags['birthday'] = parts[2];
         tags['sport'] = parts[3];
 
-        tags['birthday'] = tags['birthday'].replace(/\//g, '-');
-
-        const txt = "Name: {{name}}\nBirthday: {{birthday}}\nFavourite sport: {{sport}}";
-        menu = {
-            name: 'show_info',
-            title: "Welcome to the enquiry bot",
-            message: txt,
-            final: true,
-        }
-
         return {
-            menu: menu,
+            redirect: {
+                menu: 'show_info',
+            },
             tags: tags
         }
     }
 
     if(parts.length == 3){
-        tags['name'] = parts[0] + parts[1];
+        tags['name'] = parts[0] + " " + parts[1];
         tags['birthday'] = parts[2];
-
-        tags['birthday'] = tags['birthday'].replace(/\//g, '-');
-        menu = sport_menu;
 
         return {
             menu: menu,
+            redirect: {
+                menu: 'sport',
+            },
             tags: tags
         }
     }
 });
 
-enq.at('show_info', async () => {
+enq.at('show_info', async (req, tags) => {
+    tags['birthday'] = tags['birthday'].replace(/\//g, '-');
+
     const txt = "Name: {{name}}\nBirthday: {{birthday}}\nFavourite sport: {{sport}}";
     const menu = {
         name: 'show_info',
@@ -148,5 +138,15 @@ enq.at('show_info', async () => {
     console.log({'msisdn': '123', "prompt": "@enq"}, session.menu);
 
     session = await enq.process({'msisdn': '123', "prompt": "Ben Chambule 23/04/1994 Football"}, session);
-    console.log({'msisdn': '123', "prompt": "Ben Chambule"}, session.menu);
+    console.log({'msisdn': '123', "prompt": "Ben Chambule 23/04/1994 Football"}, session.menu);
+
+
+    session = await enq.process({'msisdn': '123', "prompt": "@enq"});
+    console.log({'msisdn': '123', "prompt": "@enq"}, session.menu);
+
+    session = await enq.process({'msisdn': '123', "prompt": "Ben Chambule 23/04/1994"}, session);
+    console.log({'msisdn': '123', "prompt": "Ben Chambule 23/04/1994"}, session.menu);
+
+    session = await enq.process({'msisdn': '123', "prompt": "Football"}, session);
+    console.log({'msisdn': '123', "prompt": "Football"}, session);
 })();

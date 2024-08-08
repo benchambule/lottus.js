@@ -1,6 +1,57 @@
 'use strict';
 //TODO: Update documentation
 
+async function __process_location(location, request, tags, context){
+    const interceptor = context.bot.getInterceptor(location);
+    let result = null;
+
+    let p_context = {
+        location: location,
+        name: context.bot.name,
+        keyword: context.bot.keyword,
+        entrypoint: context.bot.entrypoint,
+        menu: context.menu,
+    }
+
+    if(interceptor){
+        if(context.bot.debug){
+            console.log("Calling interceptor for location:", location, "with details", p_context);
+        }
+
+        result = await interceptor(request, tags, p_context);
+
+        if(context.bot.debug){
+            console.log("Result from calling interceptor for location:", location, "is", result);
+        }
+
+        if(result && result.request && !result.menu){
+            if(context.bot.debug){
+                console.log("Updating old request with new", result.request);
+            }
+            request = result.request;
+            result = null;
+        }
+    }
+
+    if(!result){
+        const processor = context.bot.getProcessor(location);
+        if(processor){
+            if(context.bot.debug){
+                console.log("Calling processor for location:", location, "with details", p_context);
+            }
+            
+            result = await processor(request, tags, p_context);
+
+            if(context.bot.debug){
+                console.log("Result from interceptor for location:", location, "is", result);
+            }
+        }
+    }
+
+    return result;
+}
+
+
 /***
  * Processes a menu with options
  * @param request
@@ -12,8 +63,10 @@ async function process_options(request, tags, context){
     if(context.bot.debug){
         console.log("Processing options request:", request, "with tags:", tags);
     }
+
     let result = null;
 
+    // TODO: Unuse for, prefer other options
     for (const [, value] of Object.entries(context.menu.options)) {
         if(request.prompt.toString() === value.key.toString()){
             request.selected_option = value;
@@ -22,46 +75,27 @@ async function process_options(request, tags, context){
                 tags = {...tags, ...request.selected_option.tags};
             }
 
-            const interceptor = context.bot.getInterceptor(value.menu);
-            if(interceptor){
-                if(context.bot.debug){
-                    console.log("Invoking interceptor for :", value.menu);
-                }
-                result = await interceptor(request, tags, context);
-
-                if(result && result.request && !result.menu){
-                    if(context.bot.debug){
-                        console.log("Updating old request with new", result.request);
-                    }
-                    request = result.request;
-                    result = null;
-                }
-            }
-
-            if(!result){
-                const processor = context.bot.getProcessor(value.menu);
-                if(processor){
-                    if(context.bot.debug){
-                        console.log("Invoking processor for :", value.menu);
-                    }
-                    result = await processor(request, tags, context);
-                }
-            }
+            result = await __process_location(value.menu, request, tags, context);
 
             break;
         }
     }
 
     if(!result){
-        let current_menu = context.menu;
-        current_menu.message = context.invali_option_message;
-
+        // TODO: Add defined error message
         return {
-            menu: current_menu,
+            menu: context.menu,
+            success: false
         };
     }
 
-    return {menu: result.menu, tags: result.tags};
+    // TODO: Check if the result is formatted correctly
+    return {
+        menu: result.menu,
+        tags: {...tags, ...result.tags},
+        redirect: result.redirect,
+        success: true
+    };
 }
 
 /***
@@ -96,7 +130,7 @@ async function process_required(request, tags, context){
             menu = current_menu;
             menu['message'] = required.error_message;
 
-            return {menu: menu, tags: tags}
+            return {menu: menu, tags: tags, success: false}
         }
     }
 
@@ -104,126 +138,57 @@ async function process_required(request, tags, context){
         menu = current_menu;
         menu['message'] = required.error_message;
 
-        return {menu: menu, tags: tags};
+        return {menu: menu, tags: tags, success: false};
     }
 
     tags[required.name] = request.prompt;
 
-    const interceptor = context.bot.getInterceptor(current_menu.next);
-    if(interceptor){
-        if(context.bot.debug){
-            console.log("Invoking interceptor for :", current_menu.next);
-        }
-        result = await interceptor(request, tags, context);
-
-        if(result && result.request && !result.menu){
-            if(context.bot.debug){
-                console.log("Updating old request with new", result.request);
-            }
-            request = result.request;
-            result = null;
-        }
-    }
+    result = await __process_location(current_menu.next, request, tags, context);
 
     if(!result){
-        const processor = context.bot.getProcessor(current_menu.next);
-        if(processor){
-            if(context.bot.debug){
-                console.log("Invoking processor for :", current_menu.next);
-            }
-            result = await processor(request, tags, context);
-        }
-    }
-
-    if(!result){
-        current_menu.message = context.invali_option_message;
+        // TODO: Add predefined error message
         return {
-            menu: current_menu,
+            menu: context.menu,
+            success: false
         };
     }
 
-    return {menu: result.menu, tags: {...tags, ...result.tags}};
+    return {
+        menu: result.menu, 
+        tags: {...tags, ...result.tags}, 
+        redirect: result.redirect,
+        success: true
+    };
 }
 
 
 async function inner_processor(bot, request, session){
     if(bot.debug){
-        console.log("Processing request:", request);
+        console.log("Processing request:", request, "session:", session);
     }
+
     let result = null;
-    let menu = null;
+    const context = {bot: bot, menu: null};
 
     if (request.prompt && (request.prompt === bot.keyword || request.prompt.includes(bot.keyword))){
-        const interceptor = bot.getInterceptor(bot.entrypoint);
-        const context = {bot: bot};
-
-        let tags = null;
-        if(session && session.tags){
-            tags = session.tags;
+        if(!session.tags){
+            session.tags = []
         }
 
-        if(interceptor){
-            if(bot.debug){
-                console.log("Invoking interceptor for :", bot.entrypoint);
-            }
-            result = await interceptor(request, tags, context);
-
-            if(result && result.request && !result.menu){
-                if(bot.debug){
-                    console.log("Updating old request with new", result.request);
-                }
-                request = result.request;
-                result = null;
-            }
-        }
-
-        if(!result){
-            const processor = bot.getProcessor(bot.entrypoint);
-            if(processor){
-                if(bot.debug){
-                    console.log("Invoking processor for :", bot.entrypoint);
-                }
-                result = await processor(request, tags, context);
-                if(bot.debug){
-                    console.log("Result :", result);
-                }
-            }
-        }
+        result = await __process_location(bot.entrypoint, request, session.tags, context);
 
         if(result && result.menu){
-            if(bot.debug){
-                console.log("Initializing session");
-            }
-
-            session = {
-                bot: bot.name,
-                msisdn: request.msisdn,
-                current_menu: result.menu,
-                location: result.menu.name,
-                tags: result.tags? result.tags : [],
-                active: true
-            };
+            session.menu = result.menu;
+            session.tags = {...session.tags, ...result.tags};
         }
-
-        if(result && result.menu){
-            menu = result.menu;
-        }
-        
-        return {menu: menu, session: session};
-    }
-
-    if(!session){
-        console.log("Session for msisdn", request.msisdn, 'not found!')
-    }
-
-    if(session){
+    } else {
         const current_menu = session.menu;
-        const context = {bot: bot, menu: current_menu};
+        context.menu = session.menu;
 
         const interceptor = bot.getInterceptor("*");
         if(interceptor){
             if(bot.debug){
-                console.log("Invoking interceptor for :", "*");
+                console.log("Invoking interceptor for: ", "*");
             }
             result = await interceptor(request, session.tags, context);
 
@@ -250,33 +215,9 @@ async function inner_processor(bot, request, session){
             result = await process_required(request, session.tags, context);
         }
 
-        if(current_menu.next && (!result || (result && result.menu && result.menu.name === current_menu.name))){
-            const interceptor = bot.getInterceptor(current_menu.next);
-
-            if(interceptor){
-                if(bot.debug){
-                    console.log("Invoking interceptor for :", current_menu.next);
-                }
-                result = await interceptor(request, session.tags, context);
-
-                if(result && result.request && !result.menu){
-                    if(bot.debug){
-                        console.log("Updating old request with new", result.request);
-                    }
-                    request = result.request;
-                    result = null;
-                }
-            }
-
-            if(!result){
-                const processor = bot.getProcessor(current_menu.next);
-
-                if(processor){
-                    if(bot.debug){
-                        console.log("Invoking processor for :", current_menu.next);
-                    }
-                    result = await processor(request, session.tags, context);
-                }
+        if(!result || (result && result.success)){
+            if(current_menu.next && (!result || (result && result.menu && result.menu.name === current_menu.name))){
+                result = await __process_location(current_menu.next, request, session.tags, context);
             }
         }
 
@@ -284,8 +225,20 @@ async function inner_processor(bot, request, session){
             if(bot.debug){
                 console.log("Result of the processing is: ", result);
             }
+
+            if(result.redirect){
+                if(result.redirect.tags){
+                    result.tags = {...result.redirect.tags, ...result.tags};
+                }
+
+                if(result.redirect.prompt){
+                    request.prompt = result.redirect.prompt;
+                }
+
+                result = await __process_location(result.redirect.menu, request, result.tags, context);
+            }
+
             if(result.menu){
-                menu = result.menu;
                 session.location = result.menu.name;
 
                 if(!result.menu.options && !result.menu.required && !result.menu.next){
@@ -294,24 +247,14 @@ async function inner_processor(bot, request, session){
             }
 
             if(result.tags){
-                
                 for (const [key, value] of Object.entries(result.tags)) {
                     session.tags[key] = value;
-
-                    if(menu.message){
-                        menu['message'] = menu.message.replace("{{" + key + "}}", value);
-                    }
-                    if(menu.title){
-                        menu['title'] = menu.title.replace("{{" + key + "}}", value);
-                    }
                 }
             }
         }
-
-        return {menu: menu, session: session};
     }
 
-    return null;
+    return {menu: result.menu, session: session, tags: session.tags};;
 }
 
 /**
@@ -324,6 +267,16 @@ async function defaultProcessor(bot, request, session){
     if(bot.debug){
         console.log("Processing request: ", request, "with bot:", bot.name);
     }
+
+    if(!session){
+        session = {
+            bot: bot.name,
+            msisdn: request.msisdn,
+            active: true,
+            tags: []
+        }
+    }
+
     let result = await inner_processor(bot, request, session);
 
     if(!result || !result.menu){
@@ -334,50 +287,28 @@ async function defaultProcessor(bot, request, session){
         request.prompt = "";
     }
 
-    if(result && result.menu){
-        const reqs = request.prompt.split(" ");
-        let txt = reqs.join(" ");
-        if(result.menu.message && result.menu.message.includes("{{$@}}")){
-            result.menu.message = result.menu.message.replace("{{$@}}", txt);
-        }
-
-        if(result.menu.title && result.menu.title.includes("{{$@}}")){
-            result.menu.title = result.menu.title.replace("{{$@}}", txt);
-        }
-        
-        if(result.tags){
-            for (const [key, value] of Object.entries(result.tags)) {
-                if(result.menu.message && result.menu.message.includes("{{" + key + "}}")){
-                    result.menu.message = result.menu.message.replace("{{" + key + "}}", value);
-                }
-                if(result.menu.title && result.menu.title.includes("{{" + key + "}}")){
-                    result.menu.title = result.menu.title.replace("{{" + key + "}}", value);
-                }
+    if(result && result.menu && result.tags){
+        for (const [key, value] of Object.entries(result.tags)) {
+            if(result.menu.message && result.menu.message.includes("{{" + key + "}}")){
+                result.menu.message = result.menu.message.replace("{{" + key + "}}", value);
             }
-        }
-
-        if(result.session && result.session.tags){
-            for (const [key, value] of Object.entries(result.session.tags)) {
-                if(result.menu.message && result.menu.message.includes("{{" + key + "}}")){
-                    result.menu.message = result.menu.message.replace("{{" + key + "}}", value);
-                }
-                if(result.menu.title && result.menu.title.includes("{{" + key + "}}")){
-                    result.menu.title = result.menu.title.replace("{{" + key + "}}", value);
-                }
+            if(result.menu.title && result.menu.title.includes("{{" + key + "}}")){
+                result.menu.title = result.menu.title.replace("{{" + key + "}}", value);
             }
         }
     }
 
-    if(result.session){
-        result.session.menu = result.menu;
-        result.session.active = !result.menu.final;
-    }
+    session = result.session;
+
+    session.menu = result.menu;
+    session.tags = result.tags;
+    session.active = !session.menu.final;
 
     if(bot.debug){
-        console.log("Result from processing request:", request, 'is menu:', result);
+        console.log("Result from processing request:", request, 'is:', session);
     }
 
-    return result.session;
+    return session;
 }
 
 /**

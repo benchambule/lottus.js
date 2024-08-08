@@ -8,8 +8,6 @@
         keyword: '@barber',
     });
 
-    
-
     bot.at('main', async() => {
         const menu = {
             name: 'main', 
