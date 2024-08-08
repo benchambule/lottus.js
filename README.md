@@ -37,7 +37,7 @@ reverse.at('main', async function(request){
 });
 
 (async () => {
-    let result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "giberish"}, null);
+    let result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "giberish"});
     console.log(result.menu.text);
 
     result = await reverse.process({msisdn: 123, prompt:"@reverse", sentence: "bonjour le monde"});
